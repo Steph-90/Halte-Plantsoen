@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#17120e">
+<title>Halte Plantsoen — Fotostation 1913</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 50% 20%, #4b3827 0%, #1b1510 45%, #080706 100%);
+    color: #eadfc9;
+    font-family: Georgia, "Times New Roman", serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 18px;
+  }
+  .station {
+    width: min(680px, 100%);
+    background: #17120e;
+    border: 2px solid #806548;
+    box-shadow: 0 0 0 7px #241b14, 0 20px 60px #000;
+    padding: 18px;
+    position: relative;
+  }
+  .station:before, .station:after {
+    content:"";
+    position:absolute; left:10px; right:10px; height:1px;
+    background:#806548; opacity:.7;
+  }
+  .station:before { top:9px; } .station:after { bottom:9px; }
+
+  header { text-align:center; padding:12px 10px 16px; }
+  .small { letter-spacing:4px; font-size:12px; color:#bda889; }
+  h1 { margin:6px 0 0; font-size:clamp(29px,7vw,48px); letter-spacing:3px; }
+  .year { font-size:18px; letter-spacing:7px; margin-top:2px; }
+  .warning {
+    margin:12px auto 4px;
+    max-width:520px;
+    font-size:15px;
+    letter-spacing:1px;
+    font-style:italic;
+  }
+
+  .camera {
+    background:#080706;
+    border:1px solid #5f4a36;
+    padding:8px;
+    position:relative;
+  }
+  video {
+    display:block;
+    width:100%;
+    aspect-ratio: 4/3;
+    object-fit:cover;
+    background:#050505;
+    transform:scaleX(-1);
+  }
+  canvas { display:none; width:100%; height:auto; }
+
+  .controls { text-align:center; padding:15px 0 5px; }
+  button {
+    border:1px solid #a58b68;
+    background:#2b2118;
+    color:#f2e6cf;
+    padding:13px 22px;
+    margin:5px;
+    font:inherit;
+    font-size:16px;
+    cursor:pointer;
+    box-shadow:inset 0 0 0 1px #100d0a;
+  }
+  button:hover { background:#493524; }
+  button:disabled { opacity:.4; cursor:not-allowed; }
+  .hidden { display:none !important; }
+
+  .status {
+    text-align:center;
+    min-height:24px;
+    color:#c8b18e;
+    font-size:14px;
+  }
+  .instructions {
+    text-align:center;
+    font-size:13px;
+    color:#a9977c;
+    line-height:1.5;
+    margin-top:12px;
+  }
+  .result {
+    border-top:1px solid #5f4a36;
+    padding-top:14px;
+    margin-top:10px;
+  }
+  .result img { width:100%; display:block; border:8px solid #ded0b5; }
+  .footer {
+    text-align:center;
+    color:#8e7a61;
+    font-size:11px;
+    letter-spacing:2px;
+    margin-top:15px;
+  }
+</style>
+</head>
+<body>
+<main class="station">
+  <header>
+    <div class="small">TREIN 13 • FOTOSTATION</div>
+    <h1>HALTE PLANTSOEN</h1>
+    <div class="year">1913</div>
+    <div class="warning">LAAT JE FOTO MAKEN VOORDAT JE VERMIST RAAKT…</div>
+  </header>
+
+  <section class="camera">
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="canvas"></canvas>
+  </section>
+
+  <div class="controls">
+    <button id="start">📷 START DE CAMERA</button>
+    <button id="take" class="hidden">MAAK JE FOTO</button>
+    <button id="again" class="hidden">OPNIEUW</button>
+    <button id="save" class="hidden">BEWAAR FOTO</button>
+  </div>
+
+  <div id="status" class="status">
+    Druk op “Start de camera” en geef je telefoon toestemming voor de camera.
+  </div>
+
+  <div id="result" class="result hidden">
+    <img id="photo" alt="Je foto in Halte Plantsoen 1913 stijl">
+  </div>
+
+  <div class="instructions">
+    De foto wordt op deze telefoon gemaakt en bewerkt.<br>
+    Er wordt niets naar deze website geüpload.
+  </div>
+
+  <div class="footer">VERTREK • 23 OKTOBER • TREIN 13</div>
+</main>
+
+<script>
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const photo = document.getElementById("photo");
+const start = document.getElementById("start");
+const take = document.getElementById("take");
+const again = document.getElementById("again");
+const save = document.getElementById("save");
+const status = document.getElementById("status");
+const result = document.getElementById("result");
+
+let stream = null;
+
+start.addEventListener("click", async () => {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user" },
+      audio: false
+    });
+    video.srcObject = stream;
+    start.classList.add("hidden");
+    take.classList.remove("hidden");
+    status.textContent = "Kijk in de camera… de trein vertrekt zo.";
+  } catch (e) {
+    status.textContent =
+      "De camera kon niet worden gestart. Controleer of je cameratoegang hebt toegestaan en open de site via HTTPS.";
+  }
+});
+
+take.addEventListener("click", () => {
+  const w = video.videoWidth;
+  const h = video.videoHeight;
+  if (!w || !h) return;
+
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(video, 0, 0, w, h);
+
+  // 1913 zwart-wit/sepia basis
+  const image = ctx.getImageData(0, 0, w, h);
+  const d = image.data;
+  for (let y=0; y<h; y++) {
+    for (let x=0; x<w; x++) {
+      const i=(y*w+x)*4;
+      const r=d[i], g=d[i+1], b=d[i+2];
+      let gray = 0.299*r + 0.587*g + 0.114*b;
+      // iets warmer en contrastrijker
+      gray = (gray - 128) * 1.18 + 128;
+      const warm = Math.max(0, Math.min(255, gray));
+      d[i]   = Math.min(255, warm * 1.02 + 8);
+      d[i+1] = Math.min(255, warm * 0.94 + 4);
+      d[i+2] = Math.min(255, warm * 0.78);
+    }
+  }
+  ctx.putImageData(image, 0, 0);
+
+  // Filmkorrel
+  const grain = ctx.getImageData(0,0,w,h);
+  const gd = grain.data;
+  for (let i=0; i<gd.length; i+=4) {
+    const n=(Math.random()-0.5)*22;
+    gd[i]=Math.max(0,Math.min(255,gd[i]+n));
+    gd[i+1]=Math.max(0,Math.min(255,gd[i+1]+n));
+    gd[i+2]=Math.max(0,Math.min(255,gd[i+2]+n));
+  }
+  ctx.putImageData(grain,0,0);
+
+  // Donkere hoeken / vignette
+  const grad=ctx.createRadialGradient(w/2,h/2,Math.min(w,h)*.18,w/2,h/2,Math.max(w,h)*.72);
+  grad.addColorStop(0,"rgba(0,0,0,0)");
+  grad.addColorStop(.65,"rgba(20,12,5,.08)");
+  grad.addColorStop(1,"rgba(0,0,0,.62)");
+  ctx.fillStyle=grad;
+  ctx.fillRect(0,0,w,h);
+
+  // Oude krasjes/stof
+  for(let j=0;j<24;j++){
+    const x=Math.random()*w;
+    const y=Math.random()*h;
+    const len=10+Math.random()*100;
+    ctx.strokeStyle="rgba(245,230,195,"+(0.08+Math.random()*.18)+")";
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(x,y); ctx.lineTo(x+(Math.random()-.5)*3,y+len);
+    ctx.stroke();
+  }
+  for(let j=0;j<45;j++){
+    ctx.fillStyle="rgba(255,235,200,"+(0.08+Math.random()*.18)+")";
+    ctx.beginPath();
+    ctx.arc(Math.random()*w,Math.random()*h,Math.random()*2.2+.4,0,Math.PI*2);
+    ctx.fill();
+  }
+
+  // Oude fotokaart-rand en tekst
+  ctx.strokeStyle="#e3d4b7";
+  ctx.lineWidth=Math.max(8,w*.012);
+  ctx.strokeRect(ctx.lineWidth/2,ctx.lineWidth/2,w-ctx.lineWidth,h-ctx.lineWidth);
+
+  const bandH=Math.max(58,h*.13);
+  ctx.fillStyle="rgba(20,14,9,.82)";
+  ctx.fillRect(0,h-bandH,w,bandH);
+
+  ctx.textAlign="center";
+  ctx.fillStyle="#eadfc9";
+  ctx.font="bold "+Math.max(18,w*.035)+"px Georgia";
+  ctx.fillText("HALTE PLANTSOEN",w/2,h-bandH*.55);
+  ctx.font=Math.max(13,w*.022)+"px Georgia";
+  ctx.fillText("1913  •  TREIN 13",w/2,h-bandH*.22);
+
+  // spiegeling terug naar normale foto-orientatie
+  const finalCanvas=document.createElement("canvas");
+  finalCanvas.width=w; finalCanvas.height=h;
+  const fctx=finalCanvas.getContext("2d");
+  fctx.save();
+  fctx.translate(w,0);
+  fctx.scale(-1,1);
+  fctx.drawImage(canvas,0,0);
+  fctx.restore();
+
+  const dataUrl=finalCanvas.toDataURL("image/jpeg",.92);
+  photo.src=dataUrl;
+  result.classList.remove("hidden");
+  take.classList.add("hidden");
+  again.classList.remove("hidden");
+  save.classList.remove("hidden");
+  status.textContent="Je foto is klaar. Hopelijk haal je de volgende halte…";
+  window.finalPhoto=dataUrl;
+});
+
+again.addEventListener("click",()=>{
+  result.classList.add("hidden");
+  save.classList.add("hidden");
+  again.classList.add("hidden");
+  take.classList.remove("hidden");
+  status.textContent="Kijk opnieuw in de camera…";
+});
+
+save.addEventListener("click",()=>{
+  if(!window.finalPhoto) return;
+  const a=document.createElement("a");
+  a.href=window.finalPhoto;
+  a.download="Halte-Plantsoen-1913.jpg";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  status.textContent="Foto opgeslagen. Goede reis…";
+});
+</script>
+</body>
+</html>
