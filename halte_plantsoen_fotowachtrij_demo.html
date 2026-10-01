@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Halte Plantsoen — Fotowachtrij 1913</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#111;color:#eee;font-family:system-ui,sans-serif}
+.wrap{max-width:720px;margin:auto;padding:14px}h1{font:26px Georgia,serif;text-align:center;margin:5px 0 14px}
+video{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#000;border-radius:12px}
+.controls{display:flex;gap:8px;margin-top:10px}button{border:0;border-radius:9px;padding:13px 15px;font-weight:700;font-size:15px}
+#capture{flex:1}#switch,.delete{background:#333;color:#fff}.status{text-align:center;color:#aaa;min-height:22px;margin:10px 0}
+.panel,.publish{background:#1b1b1b;border-radius:12px;padding:13px;margin-top:15px}
+h2{font:20px Georgia,serif;margin:0 0 10px}.set{border-top:1px solid #333;padding:12px 0}
+.time{font-size:12px;color:#999;margin-bottom:7px}.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.thumb{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;cursor:pointer}.thumb.selected{outline:3px solid #fff}
+.actions{display:flex;gap:7px;margin-top:8px}.select{flex:1}.publish{display:none}.publish img{width:100%;display:block}
+.publish button{width:100%;margin-top:10px}.empty,.note{color:#888;font-size:13px;text-align:center}.note{margin:14px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>HALTE PLANTSOEN · 1913</h1>
+<video id="video" autoplay playsinline></video>
+<div class="controls"><button id="capture">MAAK FOTO</button><button id="switch">↻</button></div>
+<div id="status" class="status">Camera wordt gestart…</div>
+
+<section class="panel"><h2>FOTO'S WACHTEN</h2><div id="queue" class="empty">Nog geen foto's.</div></section>
+
+<section id="publishPanel" class="publish">
+<h2>GEKOZEN FOTO</h2><img id="chosen"><button id="publish">PUBLICEREN</button>
+</section>
+<div class="note">Foto's worden lokaal op dit apparaat bewaard totdat jij kiest.</div>
+</div>
+<canvas id="canvas" hidden></canvas>
+
+<script>
+const video=document.getElementById('video'),canvas=document.getElementById('canvas');
+const capture=document.getElementById('capture'),status=document.getElementById('status');
+const queue=document.getElementById('queue'),pub=document.getElementById('publishPanel'),chosen=document.getElementById('chosen'),publish=document.getElementById('publish');
+let stream=null,facing='environment',shots=[],sets=[],selected=null;
+
+function db(){
+ return new Promise((ok,no)=>{
+  const r=indexedDB.open('HaltePlantsoenFotos',1);
+  r.onupgradeneeded=()=>r.result.createObjectStore('sets',{keyPath:'id',autoIncrement:true});
+  r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error);
+ });
+}
+async function all(){
+ const d=await db();return new Promise((ok,no)=>{const r=d.transaction('sets').objectStore('sets').getAll();r.onsuccess=()=>ok(r.result.sort((a,b)=>a.time-b.time));r.onerror=()=>no(r.error)});
+}
+async function add(x){
+ const d=await db();return new Promise((ok,no)=>{const r=d.transaction('sets','readwrite').objectStore('sets').add(x);r.onsuccess=ok;r.onerror=()=>no(r.error)});
+}
+async function remove(id){
+ const d=await db();return new Promise((ok,no)=>{const r=d.transaction('sets','readwrite').objectStore('sets').delete(id);r.onsuccess=ok;r.onerror=()=>no(r.error)});
+}
+async function camera(){
+ if(stream)stream.getTracks().forEach(t=>t.stop());
+ try{
+  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing},width:{ideal:1920},height:{ideal:1080}},audio:false});
+  video.srcObject=stream;status.textContent='Klaar om te fotograferen.';
+ }catch(e){status.textContent='Camera niet gestart. Gebruik HTTPS en geef cameratoegang.'}
+}
+function photo(){
+ if(!video.videoWidth)return null;
+ canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+ canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+ return canvas.toDataURL('image/jpeg',.9);
+}
+capture.onclick=async()=>{
+ const p=photo();if(!p)return;
+ shots.push(p);status.textContent=`Foto ${shots.length} van 3 gemaakt.`;
+ if(shots.length===3){
+  await add({time:Date.now(),photos:[...shots]});shots=[];sets=await all();
+  status.textContent='Fotoset opgeslagen. Klaar voor het volgende groepje.';render();
+ }
+};
+document.getElementById('switch').onclick=()=>{facing=facing==='environment'?'user':'environment';camera()};
+
+function time(t){return new Date(t).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})}
+function render(){
+ if(!sets.length){queue.className='empty';queue.textContent="Nog geen foto's.";return}
+ queue.className='';queue.innerHTML='';
+ [...sets].reverse().forEach(s=>{
+  const box=document.createElement('div');box.className='set';
+  box.innerHTML=`<div class="time">Fotoset · ${time(s.time)}</div>`;
+  const thumbs=document.createElement('div');thumbs.className='thumbs';
+  s.photos.forEach((src,i)=>{
+   const im=document.createElement('img');im.className='thumb';im.src=src;
+   im.onclick=()=>choose(s,i,im);thumbs.appendChild(im);
+  });
+  const a=document.createElement('div');a.className='actions';
+  const b=document.createElement('button');b.className='select';b.textContent='KIES DEZE FOTO';b.onclick=()=>choose(s,0,thumbs.children[0]);
+  const d=document.createElement('button');d.className='delete';d.textContent='VERWIJDER';d.onclick=async()=>{await remove(s.id);sets=await all();render()};
+  a.append(b,d);box.append(thumbs,a);queue.appendChild(box);
+ });
+}
+function choose(s,i,im){
+ selected={set:s.id,index:i};document.querySelectorAll('.thumb').forEach(x=>x.classList.remove('selected'));im.classList.add('selected');
+ chosen.src=s.photos[i];pub.style.display='block';pub.scrollIntoView({behavior:'smooth',block:'center'});
+}
+publish.onclick=()=>{
+ if(!selected)return;
+ publish.textContent='GEPUBLICEERD ✓';publish.disabled=true;
+ status.textContent='Foto geselecteerd. Online publiceren bouwen we in de volgende stap.';
+};
+
+(async()=>{sets=await all();render();if(navigator.mediaDevices?.getUserMedia)camera();else status.textContent='Deze browser ondersteunt de camera niet.'})();
+</script>
+</body>
+</html>
