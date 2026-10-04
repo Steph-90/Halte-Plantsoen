@@ -595,4 +595,210 @@ function makePhoto(img){
     lichte oude inkt
  */
 
- x.fillStyle="#dfc
+ x.fillStyle="#dfc28b";
+
+ x.fillText(
+  "HALTE PLANTSOEN",
+  w/2,
+  b*1.72
+ );
+
+
+ /*
+    dunne onderstreping
+ */
+
+ x.strokeStyle="#9b7645";
+ x.lineWidth=2;
+
+ x.beginPath();
+
+ x.moveTo(w*.27,b*2.42);
+ x.lineTo(w*.73,b*2.42);
+
+ x.stroke();
+
+ x.restore();
+
+
+ /* =================================================
+    ONDERTITEL
+ ================================================= */
+
+ x.save();
+
+ x.textAlign="center";
+
+ const sub=Math.max(
+  13,
+  Math.min(w*.025,29)
+ );
+
+ x.font=
+  `bold ${sub}px Georgia,"Times New Roman",serif`;
+
+ x.fillStyle="#d4b77f";
+
+ x.fillText(
+  "HALLOWEEN · 23 OKTOBER 2026",
+  w/2,
+  h-b*1.45
+ );
+
+ x.restore();
+
+
+ return c;
+
+}
+
+
+/* =====================================================
+   VICTORIAAN HOEKORNAMENT
+===================================================== */
+
+function corner(c,x,y,sx,sy){
+
+ c.save();
+
+ c.translate(x,y);
+ c.scale(sx,sy);
+
+ c.strokeStyle="#a17b49";
+ c.lineWidth=2.2;
+
+ /*
+    grote krul
+ */
+
+ c.beginPath();
+
+ c.moveTo(0,0);
+
+ c.bezierCurveTo(
+  30,0,
+  38,28,
+  13,39
+ );
+
+ c.bezierCurveTo(
+  -8,48,
+  3,62,
+  22,50
+ );
+
+ c.stroke();
+
+
+ /*
+    tweede krul
+ */
+
+ c.beginPath();
+
+ c.moveTo(5,5);
+
+ c.bezierCurveTo(
+  38,9,
+  49,39,
+  29,61
+ );
+
+ c.stroke();
+
+
+ /*
+    webachtige lijnen
+ */
+
+ c.globalAlpha=.75;
+
+ for(let i=0;i<5;i++){
+
+  c.beginPath();
+
+  c.moveTo(
+   4,
+   10+i*10
+  );
+
+  c.quadraticCurveTo(
+   18,
+   5+i*11,
+   32,
+   10+i*10
+  );
+
+  c.stroke();
+
+ }
+
+ c.restore();
+
+}
+
+
+/* =====================================================
+   WACHTRIJ
+===================================================== */
+
+saveBtn.addEventListener("click",()=>{
+
+ if(!processed.length)return;
+
+ for(const image of processed){
+
+  const data=image.toDataURL(
+   "image/jpeg",
+   .92
+  );
+
+  const card=document.createElement("div");
+  card.className="card";
+
+  const img=document.createElement("img");
+  img.src=data;
+
+  const info=document.createElement("div");
+  info.className="cardInfo";
+  info.textContent="Klaar voor beoordeling";
+
+  card.appendChild(img);
+  card.appendChild(info);
+
+  queueGrid.prepend(card);
+
+ }
+
+ processed=[];
+
+ wrap.style.display="none";
+ filesInput.value="";
+
+ statusEl.textContent=
+  "Foto('s) staan nu in de wachtrij.";
+
+});
+
+
+/* =====================================================
+   ANNULEREN
+===================================================== */
+
+clearBtn.addEventListener("click",()=>{
+
+ processed=[];
+
+ wrap.style.display="none";
+
+ filesInput.value="";
+
+ statusEl.textContent=
+  "Kies één of meer foto's.";
+
+});
+
+</script>
+
+</body>
+</html>
