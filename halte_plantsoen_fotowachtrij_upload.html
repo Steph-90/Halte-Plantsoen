@@ -52,182 +52,224 @@ De originele Samsung-foto wordt niet veranderd. De site maakt een nieuwe versie 
 </div>
 </main>
 
-<script>
-const filesInput=document.getElementById("files");
-const statusEl=document.getElementById("status");
-const wrap=document.getElementById("previewWrap");
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
-const queueGrid=document.getElementById("queueGrid");
-const saveBtn=document.getElementById("save");
-const clearBtn=document.getElementById("clear");
+  <script>
+const filesInput = document.getElementById("files");
+const statusEl = document.getElementById("status");
+const wrap = document.getElementById("previewWrap");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const queueGrid = document.getElementById("queueGrid");
+const saveBtn = document.getElementById("save");
+const clearBtn = document.getElementById("clear");
 
-// ===== FOTO-ONTWERP — HIER KUNNEN WE LATER MAKKELIJK AANPASSEN =====
-const PHOTO_STYLE = {
-  titel: "HALTE PLANTSOEN",
-  ondertekst: "HALLOWEEN · 23 OKTOBER 2026",
+let processed = [];
 
-  // Filter: deze waarden kunnen we later aanpassen
-  sepia: 0.65,
-  saturate: 0.65,
-  contrast: 1.05,
-  brightness: 1.08,
 
-  kaderKleur: "#d8c5a0",
-  tekstKleur: "#352719"
-};
-
-let processed=[]; 
+/* =========================================================
+   FOTO MAKEN
+   ========================================================= */
 
 function makeProcessed(img){
 
-  const maxW=1800;
-  const scale=Math.min(1,maxW/img.naturalWidth);
-  const w=Math.round(img.naturalWidth*scale);
-  const h=Math.round(img.naturalHeight*scale);
+  const maxW = 1800;
+  const scale = Math.min(1, maxW / img.naturalWidth);
 
-  const border=Math.max(32,Math.round(w*.022));
-  const bottom=Math.max(220,Math.round(h*.17));
+  const w = Math.round(img.naturalWidth * scale);
+  const h = Math.round(img.naturalHeight * scale);
 
-  canvas.width=w+border*2;
-  canvas.height=h+border+bottom;
+  const border = Math.max(42, Math.round(w * 0.027));
+  const bottom = Math.max(220, Math.round(h * 0.17));
 
-  // =====================================================
-  // ACHTERGROND / OUD PAPIER
-  // =====================================================
+  canvas.width = w + border * 2;
+  canvas.height = h + border + bottom;
 
-  ctx.fillStyle="#b99a62";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+  /* -------------------------------------------------------
+     DONKERE OUDE PAPIERACHTERGROND
+     ------------------------------------------------------- */
 
-  // =====================================================
-  // FOTO
-  // KLEUR BLIJFT BEHOUDEN — ALLEEN OUDE FILMTOON
-  // =====================================================
+  ctx.fillStyle = "#2b1b12";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  const photo=document.createElement("canvas");
-  photo.width=w;
-  photo.height=h;
 
-  const p=photo.getContext("2d");
+  /* -------------------------------------------------------
+     FOTO OP EIGEN CANVAS
+     ------------------------------------------------------- */
 
-  p.drawImage(img,0,0,w,h);
+  const photo = document.createElement("canvas");
+  photo.width = w;
+  photo.height = h;
 
-  const data=p.getImageData(0,0,w,h);
-  const px=data.data;
+  const pctx = photo.getContext("2d");
 
-  for(let i=0;i<px.length;i+=4){
+  pctx.drawImage(img, 0, 0, w, h);
 
-    let r=px[i];
-    let g=px[i+1];
-    let b=px[i+2];
 
-    // warme oude filmtoon
-    r=r*1.035+3;
-    g=g*.985+1;
-    b=b*.91;
+  /* -------------------------------------------------------
+     KLEURCORRECTIE
+     KLEUREN BLIJVEN ZICHTBAAR
+     ------------------------------------------------------- */
 
-    // kleuren iets zachter, maar NIET weg
-    const avg=(r+g+b)/3;
+  const imageData = pctx.getImageData(0, 0, w, h);
+  const pixels = imageData.data;
 
-    r=avg+(r-avg)*.93;
-    g=avg+(g-avg)*.93;
-    b=avg+(b-avg)*.93;
+  for(let i = 0; i < pixels.length; i += 4){
 
-    // ouderwets contrast
-    r=(r-128)*1.08+128;
-    g=(g-128)*1.08+128;
-    b=(b-128)*1.08+128;
+    let r = pixels[i];
+    let g = pixels[i + 1];
+    let b = pixels[i + 2];
 
-    // subtiele filmkorrel
-    const grain=(Math.random()-.5)*10;
+    /*
+      Oude warme filmtoon.
+      Niet zwart-wit en niet zwaar sepia.
+    */
 
-    px[i]=Math.max(0,Math.min(255,r+grain));
-    px[i+1]=Math.max(0,Math.min(255,g+grain));
-    px[i+2]=Math.max(0,Math.min(255,b+grain));
+    r = r * 1.06 + 4;
+    g = g * 0.99 + 2;
+    b = b * 0.91;
+
+    /*
+      Iets minder moderne digitale verzadiging.
+    */
+
+    const gemiddelde = (r + g + b) / 3;
+
+    r = gemiddelde + (r - gemiddelde) * 0.94;
+    g = gemiddelde + (g - gemiddelde) * 0.94;
+    b = gemiddelde + (b - gemiddelde) * 0.94;
+
+    /*
+      Oudere film heeft iets zachter contrast.
+    */
+
+    r = (r - 128) * 1.04 + 128;
+    g = (g - 128) * 1.04 + 128;
+    b = (b - 128) * 1.04 + 128;
+
+    /*
+      Echte filmkorrel.
+    */
+
+    const korrel = (Math.random() - 0.5) * 16;
+
+    pixels[i] = Math.max(0, Math.min(255, r + korrel));
+    pixels[i + 1] = Math.max(0, Math.min(255, g + korrel));
+    pixels[i + 2] = Math.max(0, Math.min(255, b + korrel));
   }
 
-  p.putImageData(data,0,0);
+  pctx.putImageData(imageData, 0, 0);
 
-  ctx.drawImage(photo,border,border);
 
-  // =====================================================
-  // DONKERE VERWEERDE HOEKEN
-  // =====================================================
+  /* -------------------------------------------------------
+     FOTO PLAATSEN
+     ------------------------------------------------------- */
 
-  const vignette=ctx.createRadialGradient(
-    canvas.width/2,
-    border+h/2,
-    Math.min(w,h)*.25,
-    canvas.width/2,
-    border+h/2,
-    Math.max(w,h)*.72
-  );
+  ctx.drawImage(photo, border, border);
 
-  vignette.addColorStop(0,"rgba(0,0,0,0)");
-  vignette.addColorStop(.68,"rgba(20,10,4,.03)");
-  vignette.addColorStop(.86,"rgba(30,15,5,.16)");
-  vignette.addColorStop(1,"rgba(5,2,1,.62)");
 
-  ctx.fillStyle=vignette;
-  ctx.fillRect(border,border,w,h);
-
-  // =====================================================
-  // OUDE VLEKKEN / VERKLEURING
-  // =====================================================
+  /* -------------------------------------------------------
+     WARME OUDE-FILM LAAG
+     ------------------------------------------------------- */
 
   ctx.save();
-  ctx.globalAlpha=.13;
 
-  for(let i=0;i<25;i++){
+  ctx.globalAlpha = 0.12;
+  ctx.fillStyle = "#a77b43";
+  ctx.fillRect(border, border, w, h);
 
-    const x=border+Math.random()*w;
-    const y=border+Math.random()*h;
-    const r=2+Math.random()*18;
+  ctx.restore();
 
-    ctx.fillStyle=
-      i%2===0 ? "#4b2c18" : "#e4c991";
+
+  /* -------------------------------------------------------
+     DONKERE OUDE HOEKEN
+     ------------------------------------------------------- */
+
+  const vignette = ctx.createRadialGradient(
+    canvas.width / 2,
+    border + h / 2,
+    Math.min(w, h) * 0.20,
+    canvas.width / 2,
+    border + h / 2,
+    Math.max(w, h) * 0.72
+  );
+
+  vignette.addColorStop(0, "rgba(0,0,0,0)");
+  vignette.addColorStop(0.55, "rgba(20,8,3,0)");
+  vignette.addColorStop(0.78, "rgba(35,15,5,.12)");
+  vignette.addColorStop(1, "rgba(5,2,1,.62)");
+
+  ctx.fillStyle = vignette;
+  ctx.fillRect(border, border, w, h);
+
+
+  /* -------------------------------------------------------
+     VERWEERDE VLEKKEN
+     ------------------------------------------------------- */
+
+  ctx.save();
+
+  for(let i = 0; i < 35; i++){
+
+    const x = border + Math.random() * w;
+    const y = border + Math.random() * h;
+    const radius = 2 + Math.random() * 18;
+
+    ctx.globalAlpha = 0.035 + Math.random() * 0.07;
+
+    ctx.fillStyle =
+      i % 2 === 0
+      ? "#3b2112"
+      : "#ead09a";
 
     ctx.beginPath();
-    ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
     ctx.fill();
   }
 
   ctx.restore();
 
-  // =====================================================
-  // KRASSEN / FILMSCHADE
-  // =====================================================
+
+  /* -------------------------------------------------------
+     OUDE FILM KRASSEN
+     ------------------------------------------------------- */
 
   ctx.save();
-  ctx.globalAlpha=.22;
-  ctx.lineWidth=1;
 
-  for(let i=0;i<32;i++){
+  for(let i = 0; i < 42; i++){
 
-    const x=border+Math.random()*w;
-    const y=border+Math.random()*h;
-    const lengte=10+Math.random()*80;
+    const x = border + Math.random() * w;
+    const y = border + Math.random() * h;
 
-    ctx.strokeStyle=
-      i%3===0 ? "#f0dfb4" : "#392116";
+    const lengte = 10 + Math.random() * 100;
+
+    ctx.globalAlpha = 0.08 + Math.random() * 0.12;
+    ctx.lineWidth = Math.random() < 0.7 ? 1 : 2;
+
+    ctx.strokeStyle =
+      i % 3 === 0
+      ? "#f0dfb8"
+      : "#2a150c";
 
     ctx.beginPath();
-    ctx.moveTo(x,y);
+
+    ctx.moveTo(x, y);
+
     ctx.lineTo(
-      x+lengte,
-      y+(Math.random()*6-3)
+      x + lengte,
+      y + (Math.random() * 8 - 4)
     );
+
     ctx.stroke();
   }
 
   ctx.restore();
 
-  // =====================================================
-  // VERWEERDE FOTORAND
-  // =====================================================
 
-  ctx.strokeStyle="#2c180e";
-  ctx.lineWidth=5;
+  /* -------------------------------------------------------
+     OUDE FOTO RAND
+     ------------------------------------------------------- */
+
+  ctx.strokeStyle = "#170c07";
+  ctx.lineWidth = 7;
 
   ctx.strokeRect(
     border,
@@ -236,242 +278,406 @@ function makeProcessed(img){
     h
   );
 
-  ctx.strokeStyle="rgba(232,204,151,.65)";
-  ctx.lineWidth=2;
+  ctx.strokeStyle = "rgba(220,190,135,.55)";
+  ctx.lineWidth = 2;
 
   ctx.strokeRect(
-    border+8,
-    border+8,
-    w-16,
-    h-16
+    border + 9,
+    border + 9,
+    w - 18,
+    h - 18
   );
 
-  // =====================================================
-  // ONDERSTE OUDE PAPIERSTROOK
-  // =====================================================
 
-  ctx.fillStyle="#b99a62";
+  /* -------------------------------------------------------
+     ONDERSTE KADER
+     ------------------------------------------------------- */
+
+  ctx.fillStyle = "#8f7045";
 
   ctx.fillRect(
     border,
-    border+h,
+    border + h,
     w,
     bottom
   );
 
-  // papiertextuur
+
+  /* -------------------------------------------------------
+     OUDE PAPIERSTRUCTUUR
+     ------------------------------------------------------- */
+
   ctx.save();
-  ctx.globalAlpha=.12;
 
-  for(let i=0;i<35;i++){
+  for(let i = 0; i < 45; i++){
 
-    const x=border+Math.random()*w;
-    const y=border+h+Math.random()*bottom;
-    const r=2+Math.random()*13;
+    const x = border + Math.random() * w;
+    const y = border + h + Math.random() * bottom;
 
-    ctx.fillStyle=
-      i%2 ? "#3b2113" : "#e5cc98";
+    const radius = 1 + Math.random() * 12;
+
+    ctx.globalAlpha = 0.04 + Math.random() * 0.09;
+
+    ctx.fillStyle =
+      i % 2
+      ? "#2d180e"
+      : "#e4c58c";
 
     ctx.beginPath();
-    ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
     ctx.fill();
   }
 
   ctx.restore();
 
-  // =====================================================
-  // HALLOWEEN / VICTORIAANSE ORNAMENTEN
-  // =====================================================
 
-  ctx.strokeStyle="#32190e";
-  ctx.lineWidth=2;
+  /* -------------------------------------------------------
+     HALLOWEEN ORNAMENTEN
+     ------------------------------------------------------- */
 
-  const decoY=border+h+31;
+  ctx.strokeStyle = "#241109";
+  ctx.lineWidth = 2;
 
-  // links
+  const ornamentY = border + h + 31;
+
+
+  /* LINKS */
+
   ctx.beginPath();
-  ctx.moveTo(border+25,decoY);
+
+  ctx.moveTo(border + 22, ornamentY);
 
   ctx.bezierCurveTo(
-    border+45,decoY-18,
-    border+62,decoY+18,
-    border+82,decoY
+    border + 42, ornamentY - 18,
+    border + 58, ornamentY + 18,
+    border + 80, ornamentY
   );
 
   ctx.bezierCurveTo(
-    border+102,decoY-18,
-    border+122,decoY+18,
-    border+148,decoY
-  );
-
-  ctx.stroke();
-
-  // rechts
-  ctx.beginPath();
-  ctx.moveTo(border+w-25,decoY);
-
-  ctx.bezierCurveTo(
-    border+w-45,decoY-18,
-    border+w-62,decoY+18,
-    border+w-82,decoY
-  );
-
-  ctx.bezierCurveTo(
-    border+w-102,decoY-18,
-    border+w-122,decoY+18,
-    border+w-148,decoY
+    border + 102, ornamentY - 18,
+    border + 122, ornamentY + 18,
+    border + 150, ornamentY
   );
 
   ctx.stroke();
 
-  // kleine spinwebachtige lijntjes
-  ctx.globalAlpha=.65;
+
+  /* RECHTS */
 
   ctx.beginPath();
-  ctx.moveTo(border+18,decoY+55);
-  ctx.lineTo(border+65,decoY+20);
-  ctx.lineTo(border+90,decoY+60);
+
+  ctx.moveTo(canvas.width - border - 22, ornamentY);
+
+  ctx.bezierCurveTo(
+    canvas.width - border - 42, ornamentY - 18,
+    canvas.width - border - 58, ornamentY + 18,
+    canvas.width - border - 80, ornamentY
+  );
+
+  ctx.bezierCurveTo(
+    canvas.width - border - 102, ornamentY - 18,
+    canvas.width - border - 122, ornamentY + 18,
+    canvas.width - border - 150, ornamentY
+  );
+
   ctx.stroke();
 
-  ctx.beginPath();
-  ctx.moveTo(border+w-18,decoY+55);
-  ctx.lineTo(border+w-65,decoY+20);
-  ctx.lineTo(border+w-90,decoY+60);
-  ctx.stroke();
 
-  ctx.globalAlpha=1;
+  /* -------------------------------------------------------
+     KLEINE SPINWEB-ACHTIGE DETAILS
+     ------------------------------------------------------- */
 
-  // =====================================================
-  // GROTE TITEL
-  // =====================================================
+  ctx.globalAlpha = 0.65;
 
-  ctx.fillStyle="#29160d";
-  ctx.textAlign="center";
+  function web(x, y, spiegel){
 
-  ctx.font=
-    "bold "+
-    Math.max(38,Math.round(w*.06))+
+    const richting = spiegel ? -1 : 1;
+
+    ctx.beginPath();
+
+    ctx.moveTo(x, y);
+
+    ctx.lineTo(
+      x + richting * 42,
+      y + 38
+    );
+
+    ctx.moveTo(x, y);
+
+    ctx.lineTo(
+      x + richting * 50,
+      y - 25
+    );
+
+    ctx.moveTo(x, y);
+
+    ctx.lineTo(
+      x + richting * 20,
+      y + 52
+    );
+
+    ctx.stroke();
+
+    ctx.beginPath();
+
+    ctx.arc(
+      x + richting * 30,
+      y + 15,
+      14,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.stroke();
+  }
+
+  web(border + 25, border + h + bottom - 35, false);
+  web(canvas.width - border - 25, border + h + bottom - 35, true);
+
+  ctx.globalAlpha = 1;
+
+
+  /* -------------------------------------------------------
+     TITEL
+     ------------------------------------------------------- */
+
+  ctx.fillStyle = "#211008";
+  ctx.textAlign = "center";
+
+  ctx.font =
+    "bold " +
+    Math.max(38, Math.round(w * 0.06)) +
     "px Georgia";
 
   ctx.fillText(
-    PHOTO_STYLE.titel,
-    canvas.width/2,
-    border+h+Math.max(92,Math.round(h*.068))
+    "HALTE PLANTSOEN",
+    canvas.width / 2,
+    border + h + Math.max(94, Math.round(h * 0.07))
   );
 
-  // =====================================================
-  // ONDERTITEL
-  // =====================================================
 
-  ctx.font=
-    Math.max(22,Math.round(w*.028))+
+  /* -------------------------------------------------------
+     ONDERTITEL
+     ------------------------------------------------------- */
+
+  ctx.font =
+    Math.max(22, Math.round(w * 0.028)) +
     "px Georgia";
 
   ctx.fillText(
-    PHOTO_STYLE.ondertekst,
-    canvas.width/2,
-    border+h+Math.max(145,Math.round(h*.108))
+    "HALLOWEEN · 23 OKTOBER 2026",
+    canvas.width / 2,
+    border + h + Math.max(145, Math.round(h * 0.108))
   );
 
-  // =====================================================
-  // KLEINE DECORATIEVE LIJN ONDERAAN
-  // =====================================================
 
-  ctx.strokeStyle="#32190e";
-  ctx.lineWidth=2;
+  /* -------------------------------------------------------
+     ONDERSTE ORNAMENT
+     ------------------------------------------------------- */
 
-  const lineY=canvas.height-27;
+  const lijnY = canvas.height - 24;
 
-  ctx.beginPath();
-  ctx.moveTo(canvas.width/2-90,lineY);
-  ctx.lineTo(canvas.width/2-15,lineY);
-  ctx.stroke();
+  ctx.strokeStyle = "#28130b";
+  ctx.lineWidth = 2;
 
   ctx.beginPath();
-  ctx.moveTo(canvas.width/2+15,lineY);
-  ctx.lineTo(canvas.width/2+90,lineY);
+
+  ctx.moveTo(
+    canvas.width / 2 - 100,
+    lijnY
+  );
+
+  ctx.lineTo(
+    canvas.width / 2 - 18,
+    lijnY
+  );
+
   ctx.stroke();
+
 
   ctx.beginPath();
-  ctx.arc(canvas.width/2,lineY,6,0,Math.PI*2);
+
+  ctx.moveTo(
+    canvas.width / 2 + 18,
+    lijnY
+  );
+
+  ctx.lineTo(
+    canvas.width / 2 + 100,
+    lijnY
+  );
+
   ctx.stroke();
 
-  return canvas.toDataURL("image/jpeg",.94);
+
+  ctx.beginPath();
+
+  ctx.arc(
+    canvas.width / 2,
+    lijnY,
+    6,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.stroke();
+
+
+  return canvas.toDataURL("image/jpeg", 0.94);
 }
-  
+
+
+/* =========================================================
+   FOTO INLADEN
+   ========================================================= */
+
 function readImage(file){
-  return new Promise((resolve,reject)=>{
-    const reader=new FileReader();
-    reader.onload=()=>{
-      const img=new Image();
-      img.onload=()=>resolve(img);
-      img.onerror=reject;
-      img.src=reader.result;
+
+  return new Promise((resolve, reject) => {
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+
+      const img = new Image();
+
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+
+      img.src = reader.result;
     };
-    reader.onerror=reject;
+
+    reader.onerror = reject;
+
     reader.readAsDataURL(file);
   });
 }
 
-filesInput.addEventListener("change",async()=>{
-  if(!filesInput.files.length)return;
 
-  statusEl.textContent="Foto's verwerken…";
-  processed=[];
-  wrap.style.display="none";
+/* =========================================================
+   FOTO KIEZEN
+   ========================================================= */
+
+filesInput.addEventListener("change", async () => {
+
+  if(!filesInput.files.length) return;
+
+  statusEl.textContent = "Foto's verwerken…";
+
+  processed = [];
+
+  wrap.style.display = "none";
 
   try{
+
     for(const file of filesInput.files){
-      const img=await readImage(file);
-      processed.push(makeProcessed(img));
+
+      const img = await readImage(file);
+
+      processed.push(
+        makeProcessed(img)
+      );
     }
 
     if(processed.length){
-      const preview=new Image();
-      preview.onload=()=>{
-        canvas.width=preview.naturalWidth;
-        canvas.height=preview.naturalHeight;
-        ctx.drawImage(preview,0,0);
+
+      const preview = new Image();
+
+      preview.onload = () => {
+
+        canvas.width = preview.naturalWidth;
+        canvas.height = preview.naturalHeight;
+
+        ctx.drawImage(
+          preview,
+          0,
+          0
+        );
       };
-      preview.src=processed[0];
-      wrap.style.display="block";
-      statusEl.textContent=processed.length+" foto"+(processed.length===1?"":"’s")+" verwerkt. Controleer de eerste foto.";
+
+      preview.src = processed[0];
+
+      wrap.style.display = "block";
+
+      statusEl.textContent =
+        processed.length +
+        " foto" +
+        (processed.length === 1 ? "" : "’s") +
+        " verwerkt. Controleer de eerste foto.";
     }
+
   }catch(e){
-    statusEl.textContent="Er ging iets mis met het inladen van de foto.";
+
+    console.error(e);
+
+    statusEl.textContent =
+      "Er ging iets mis met het inladen van de foto.";
   }
 });
 
-saveBtn.addEventListener("click",()=>{
-  if(!processed.length)return;
+
+/* =========================================================
+   IN WACHTRIJ
+   ========================================================= */
+
+saveBtn.addEventListener("click", () => {
+
+  if(!processed.length) return;
 
   for(const data of processed){
-    const card=document.createElement("div");
-    card.className="card";
 
-    const img=document.createElement("img");
-    img.src=data;
+    const card = document.createElement("div");
 
-    const small=document.createElement("small");
-    small.textContent="Wacht op goedkeuring";
+    card.className = "card";
+
+
+    const img = document.createElement("img");
+
+    img.src = data;
+
+
+    const small = document.createElement("small");
+
+    small.textContent = "Wacht op goedkeuring";
+
 
     card.appendChild(img);
     card.appendChild(small);
+
     queueGrid.prepend(card);
   }
 
-  statusEl.textContent=processed.length+" foto"+(processed.length===1?"":"’s")+" staan in de wachtrij.";
-  processed=[];
-  filesInput.value="";
-  wrap.style.display="none";
+
+  statusEl.textContent =
+    processed.length +
+    " foto" +
+    (processed.length === 1 ? "" : "’s") +
+    " staan in de wachtrij.";
+
+  processed = [];
+
+  filesInput.value = "";
+
+  wrap.style.display = "none";
 });
 
-clearBtn.addEventListener("click",()=>{
-  processed=[];
-  filesInput.value="";
-  wrap.style.display="none";
-  statusEl.textContent="Kies één of meer foto's.";
+
+/* =========================================================
+   ANNULEREN
+   ========================================================= */
+
+clearBtn.addEventListener("click", () => {
+
+  processed = [];
+
+  filesInput.value = "";
+
+  wrap.style.display = "none";
+
+  statusEl.textContent =
+    "Kies één of meer foto's.";
 });
 </script>
+  
 </body>
 </html>
