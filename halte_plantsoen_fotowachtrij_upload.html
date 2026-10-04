@@ -3,14 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>Halte Plantsoen - Fotowachtrij</title>
 
 <style>
+
 *{
   box-sizing:border-box;
 }
 
-html,body{
+html,
+body{
   margin:0;
   padding:0;
   min-height:100%;
@@ -35,9 +38,10 @@ main{
   padding:25px 0 55px;
 }
 
-/* =========================
+
+/* =========================================
    HEADER
-========================= */
+========================================= */
 
 header{
   text-align:center;
@@ -53,10 +57,18 @@ header{
 
 header h1{
   margin:0;
+
   color:#d9bf8b;
-  font-size:clamp(32px,8vw,68px);
+
+  font-size:clamp(
+    32px,
+    8vw,
+    68px
+  );
+
   letter-spacing:4px;
   line-height:1;
+
   text-shadow:
     2px 3px 0 #21140c,
     0 5px 18px #000;
@@ -64,23 +76,55 @@ header h1{
 
 header p{
   margin:11px 0 0;
+
   color:#b59d76;
+
   font-size:15px;
   letter-spacing:3px;
 }
 
-/* =========================
-   UPLOAD
-========================= */
+
+/* =========================================
+   FOTO KIEZEN
+========================================= */
+
+/*
+   De input staat NIET op display:none.
+   Daardoor werkt de fotokiezer betrouwbaar
+   op Android/Samsung.
+*/
+
+#files{
+  position:absolute;
+
+  width:1px;
+  height:1px;
+
+  opacity:0;
+
+  overflow:hidden;
+
+  z-index:-1;
+}
+
+
+/*
+   Dit is de zichtbare knop.
+*/
 
 .pick{
   display:block;
+
   width:100%;
+
   padding:18px;
+
   text-align:center;
+
   cursor:pointer;
 
   color:#ead5aa;
+
   background:
     linear-gradient(
       180deg,
@@ -93,63 +137,87 @@ header p{
   box-shadow:
     inset 0 0 0 2px #130d08,
     0 8px 22px #000;
+
+  user-select:none;
+
+  -webkit-tap-highlight-color:transparent;
 }
 
-.pick:hover{
+.pick:active{
   background:
     linear-gradient(
       180deg,
-      #594229,
+      #5b4328,
       #2d1d12
     );
+
+  transform:scale(.995);
 }
 
-input[type=file]{
-  display:none;
-}
+
+/* =========================================
+   STATUS
+========================================= */
 
 #status{
   text-align:center;
+
   color:#a9977c;
+
   font-size:14px;
+
   margin:13px 0 20px;
+
+  line-height:1.45;
 }
 
-/* =========================
+
+/* =========================================
    PREVIEW
-========================= */
+========================================= */
 
 #previewWrap{
   display:none;
+
   margin-bottom:38px;
 }
 
 .previewFrame{
   padding:12px;
+
   background:#0b0907;
+
   border:1px solid #654e32;
+
   box-shadow:
     0 12px 35px #000;
 }
 
 canvas{
   display:block;
+
   width:100%;
   height:auto;
+
+  background:#111;
 }
 
-/* =========================
-   BUTTONS
-========================= */
+
+/* =========================================
+   KNOPPEN
+========================================= */
 
 .actions{
   display:flex;
+
   gap:10px;
+
   margin-top:13px;
 }
 
 button{
   flex:1;
+
   padding:15px 12px;
 
   border:1px solid #765b38;
@@ -163,20 +231,28 @@ button{
 
   color:#e9d5ad;
 
-  font-family:Georgia,"Times New Roman",serif;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
   font-weight:bold;
+
   letter-spacing:.7px;
 
   cursor:pointer;
+
+  -webkit-tap-highlight-color:transparent;
 }
 
-button:hover{
+button:active{
   background:#503720;
 }
 
-/* =========================
-   QUEUE
-========================= */
+
+/* =========================================
+   WACHTRIJ
+========================================= */
 
 #queue{
   margin-top:35px;
@@ -184,11 +260,13 @@ button:hover{
 
 #queue h2{
   margin:0 0 18px;
+
   text-align:center;
 
   color:#c9af7d;
 
   font-size:28px;
+
   letter-spacing:3px;
 
   text-shadow:
@@ -197,15 +275,21 @@ button:hover{
 
 .queueGrid{
   display:grid;
+
   grid-template-columns:
-    repeat(auto-fill,minmax(190px,1fr));
+    repeat(
+      auto-fill,
+      minmax(190px,1fr)
+    );
 
   gap:16px;
 }
 
 .card{
   background:#1b130d;
+
   border:1px solid #5b452c;
+
   padding:8px;
 
   box-shadow:
@@ -214,6 +298,7 @@ button:hover{
 
 .card img{
   display:block;
+
   width:100%;
   height:auto;
 }
@@ -224,12 +309,14 @@ button:hover{
   text-align:center;
 
   color:#9d8b71;
+
   font-size:12px;
 }
 
-/* =========================
-   MOBILE
-========================= */
+
+/* =========================================
+   MOBIEL
+========================================= */
 
 @media(max-width:600px){
 
@@ -245,7 +332,9 @@ button:hover{
   .actions{
     flex-direction:column;
   }
+
 }
+
 </style>
 </head>
 
@@ -253,6 +342,7 @@ button:hover{
 <body>
 
 <main>
+
 
 <header>
 
@@ -271,9 +361,9 @@ button:hover{
 </header>
 
 
-<label class="pick" for="files">
-  KIES FOTO'S VAN JE SAMSUNG
-</label>
+<!-- =====================================
+     FOTO KIEZEN
+===================================== -->
 
 <input
   id="files"
@@ -282,11 +372,23 @@ button:hover{
   multiple
 >
 
+<label
+  class="pick"
+  id="chooseButton"
+  for="files"
+>
+  KIES FOTO'S VAN JE SAMSUNG
+</label>
+
 
 <div id="status">
   Kies één of meer foto's. De foto's worden op deze telefoon verwerkt.
 </div>
 
+
+<!-- =====================================
+     VOORBEELD
+===================================== -->
 
 <div id="previewWrap">
 
@@ -312,6 +414,10 @@ button:hover{
 </div>
 
 
+<!-- =====================================
+     WACHTRIJ
+===================================== -->
+
 <section id="queue">
 
   <h2>
@@ -325,21 +431,1373 @@ button:hover{
 
 </section>
 
+
 </main>
 
 
 <script>
 
-/* ==========================================================
-   HALTE PLANTSOEN
-   FOTO VERWERKING
-========================================================== */
 
+/* =========================================
+   ELEMENTEN
+========================================= */
 
 const filesInput =
   document.getElementById("files");
+
+const chooseButton =
+  document.getElementById("chooseButton");
 
 const statusEl =
   document.getElementById("status");
 
 const wrap =
+  document.getElementById("previewWrap");
+
+const canvas =
+  document.getElementById("canvas");
+
+const ctx =
+  canvas.getContext("2d");
+
+const queueGrid =
+  document.getElementById("queueGrid");
+
+const saveBtn =
+  document.getElementById("save");
+
+const clearBtn =
+  document.getElementById("clear");
+
+
+let processed = [];
+
+
+/* =========================================
+   EXTRA VEILIGE KLIK VOOR SAMSUNG
+========================================= */
+
+chooseButton.addEventListener(
+  "click",
+  function(){
+
+    /*
+       De label koppelt normaal automatisch
+       aan het inputveld.
+
+       Deze kleine controle zorgt er daarnaast
+       voor dat de fotokiezer op Android
+       daadwerkelijk geopend wordt.
+    */
+
+    setTimeout(
+      function(){
+
+        if(
+          document.activeElement !== filesInput
+        ){
+          filesInput.click();
+        }
+
+      },
+      50
+    );
+
+  }
+);
+
+
+/* =========================================
+   FOTO'S GEKOZEN
+========================================= */
+
+filesInput.addEventListener(
+  "change",
+  async function(){
+
+    const files =
+      Array.from(
+        filesInput.files || []
+      );
+
+
+    if(!files.length){
+
+      statusEl.textContent =
+        "Geen foto's gekozen.";
+
+      return;
+    }
+
+
+    statusEl.textContent =
+      files.length === 1
+        ? "Foto wordt verwerkt..."
+        : files.length +
+          " foto's worden verwerkt...";
+
+
+    processed = [];
+
+
+    for(
+      const file of files
+    ){
+
+      try{
+
+        const img =
+          await loadImage(file);
+
+
+        const result =
+          makeProcessed(img);
+
+
+        processed.push(result);
+
+      }
+      catch(error){
+
+        console.error(
+          "Foto kon niet worden verwerkt:",
+          error
+        );
+
+      }
+
+    }
+
+
+    if(!processed.length){
+
+      statusEl.textContent =
+        "De foto kon niet worden verwerkt.";
+
+      return;
+    }
+
+
+    /*
+       Eerste foto laten zien.
+    */
+
+    showProcessed(
+      processed[0]
+    );
+
+
+    wrap.style.display =
+      "block";
+
+
+    statusEl.textContent =
+      processed.length === 1
+        ? "Foto klaar om te bekijken."
+        : processed.length +
+          " foto's klaar. De eerste wordt weergegeven.";
+
+
+    /*
+       Scroll iets naar het voorbeeld
+       zodat je op je telefoon meteen
+       kunt zien dat het gelukt is.
+    */
+
+    setTimeout(
+      function(){
+
+        wrap.scrollIntoView({
+          behavior:"smooth",
+          block:"start"
+        });
+
+      },
+      150
+    );
+
+  }
+);
+
+
+/* =========================================
+   VERWERKTE FOTO TONEN
+========================================= */
+
+function showProcessed(image){
+
+  canvas.width =
+    image.width;
+
+  canvas.height =
+    image.height;
+
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+
+  ctx.drawImage(
+    image,
+    0,
+    0
+  );
+
+}
+
+
+/* =========================================
+   FOTO LADEN
+========================================= */
+
+function loadImage(file){
+
+  return new Promise(
+    function(resolve,reject){
+
+      const url =
+        URL.createObjectURL(file);
+
+
+      const img =
+        new Image();
+
+
+      img.onload =
+        function(){
+
+          URL.revokeObjectURL(url);
+
+          resolve(img);
+
+        };
+
+
+      img.onerror =
+        function(){
+
+          URL.revokeObjectURL(url);
+
+          reject(
+            new Error(
+              "Foto kon niet worden geladen"
+            )
+          );
+
+        };
+
+
+      img.src =
+        url;
+
+    }
+  );
+
+}
+
+
+/* =========================================
+   FOTO VERWERKEN
+========================================= */
+
+function makeProcessed(img){
+
+  const MAX_WIDTH =
+    1500;
+
+
+  let width =
+    img.naturalWidth;
+
+  let height =
+    img.naturalHeight;
+
+
+  if(
+    !width ||
+    !height
+  ){
+
+    width =
+      img.width;
+
+    height =
+      img.height;
+
+  }
+
+
+  if(
+    width > MAX_WIDTH
+  ){
+
+    const scale =
+      MAX_WIDTH / width;
+
+
+    width =
+      Math.round(
+        width * scale
+      );
+
+
+    height =
+      Math.round(
+        height * scale
+      );
+
+  }
+
+
+  const c =
+    document.createElement(
+      "canvas"
+    );
+
+
+  c.width =
+    width;
+
+  c.height =
+    height;
+
+
+  const x =
+    c.getContext("2d");
+
+
+  /* =====================================
+     ORIGINELE FOTO
+  ===================================== */
+
+  x.drawImage(
+    img,
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  /* =====================================
+     KLEURBEWERKING
+     
+     KLEUREN BLIJVEN ZICHTBAAR
+  ===================================== */
+
+  let imageData;
+
+  try{
+
+    imageData =
+      x.getImageData(
+        0,
+        0,
+        width,
+        height
+      );
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    return c;
+
+  }
+
+
+  const data =
+    imageData.data;
+
+
+  for(
+    let i=0;
+    i<data.length;
+    i+=4
+  ){
+
+    let r =
+      data[i];
+
+    let g =
+      data[i+1];
+
+    let b =
+      data[i+2];
+
+
+    /*
+       Heel lichte warme tint.
+    */
+
+    r *= 1.035;
+    g *= .995;
+    b *= .94;
+
+
+    /*
+       Beetje meer contrast.
+    */
+
+    r =
+      (r-128)*1.08+128;
+
+    g =
+      (g-128)*1.08+128;
+
+    b =
+      (b-128)*1.08+128;
+
+
+    data[i] =
+      Math.max(
+        0,
+        Math.min(
+          255,
+          r
+        )
+      );
+
+
+    data[i+1] =
+      Math.max(
+        0,
+        Math.min(
+          255,
+          g
+        )
+      );
+
+
+    data[i+2] =
+      Math.max(
+        0,
+        Math.min(
+          255,
+          b
+        )
+      );
+
+  }
+
+
+  x.putImageData(
+    imageData,
+    0,
+    0
+  );
+
+
+  /* =====================================
+     WARME LICHTWAAS
+  ===================================== */
+
+  const warm =
+    x.createRadialGradient(
+      width*.5,
+      height*.4,
+      0,
+      width*.5,
+      height*.5,
+      Math.max(
+        width,
+        height
+      )*.8
+    );
+
+
+  warm.addColorStop(
+    0,
+    "rgba(255,225,170,.025)"
+  );
+
+
+  warm.addColorStop(
+    .65,
+    "rgba(120,65,25,.025)"
+  );
+
+
+  warm.addColorStop(
+    1,
+    "rgba(30,10,4,.13)"
+  );
+
+
+  x.fillStyle =
+    warm;
+
+
+  x.fillRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  /* =====================================
+     FILMGRAIN
+  ===================================== */
+
+  x.save();
+
+
+  for(
+    let i=0;
+    i<2200;
+    i++
+  ){
+
+    const px =
+      Math.random()*width;
+
+    const py =
+      Math.random()*height;
+
+
+    const size =
+      Math.random()<.9
+        ? 1
+        : 2;
+
+
+    x.fillStyle =
+      Math.random()>.5
+        ? "rgba(255,240,205,.045)"
+        : "rgba(10,5,2,.055)";
+
+
+    x.fillRect(
+      px,
+      py,
+      size,
+      size
+    );
+
+  }
+
+
+  x.restore();
+
+
+  /* =====================================
+     OUDE VLEKKEN
+  ===================================== */
+
+  x.save();
+
+
+  for(
+    let i=0;
+    i<16;
+    i++
+  ){
+
+    const px =
+      Math.random()*width;
+
+    const py =
+      Math.random()*height;
+
+    const radius =
+      10+
+      Math.random()*45;
+
+
+    const stain =
+      x.createRadialGradient(
+        px,
+        py,
+        0,
+        px,
+        py,
+        radius
+      );
+
+
+    stain.addColorStop(
+      0,
+      "rgba(70,30,10,.09)"
+    );
+
+
+    stain.addColorStop(
+      .55,
+      "rgba(70,30,10,.035)"
+    );
+
+
+    stain.addColorStop(
+      1,
+      "rgba(70,30,10,0)"
+    );
+
+
+    x.fillStyle =
+      stain;
+
+
+    x.beginPath();
+
+
+    x.arc(
+      px,
+      py,
+      radius,
+      0,
+      Math.PI*2
+    );
+
+
+    x.fill();
+
+  }
+
+
+  x.restore();
+
+
+  /* =====================================
+     OUDE KRASSEN
+  ===================================== */
+
+  x.save();
+
+
+  x.globalAlpha =
+    .18;
+
+
+  for(
+    let i=0;
+    i<18;
+    i++
+  ){
+
+    const px =
+      Math.random()*width;
+
+    const py =
+      Math.random()*height;
+
+    const length =
+      20+
+      Math.random()*130;
+
+
+    x.strokeStyle =
+      Math.random()>.5
+        ? "#f0dcb3"
+        : "#28160c";
+
+
+    x.lineWidth =
+      Math.random()<.85
+        ? 1
+        : 2;
+
+
+    x.beginPath();
+
+
+    x.moveTo(
+      px,
+      py
+    );
+
+
+    x.lineTo(
+      px+length,
+      py+(Math.random()*14-7)
+    );
+
+
+    x.stroke();
+
+  }
+
+
+  x.restore();
+
+
+  /* =====================================
+     DONKERE VIGNETTE
+  ===================================== */
+
+  const edge =
+    x.createRadialGradient(
+      width/2,
+      height/2,
+      Math.min(
+        width,
+        height
+      )*.20,
+      width/2,
+      height/2,
+      Math.max(
+        width,
+        height
+      )*.72
+    );
+
+
+  edge.addColorStop(
+    0,
+    "rgba(0,0,0,0)"
+  );
+
+
+  edge.addColorStop(
+    .62,
+    "rgba(0,0,0,.025)"
+  );
+
+
+  edge.addColorStop(
+    .83,
+    "rgba(25,8,3,.22)"
+  );
+
+
+  edge.addColorStop(
+    1,
+    "rgba(5,2,1,.68)"
+  );
+
+
+  x.fillStyle =
+    edge;
+
+
+  x.fillRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  /* =====================================
+     KADER
+  ===================================== */
+
+  const border =
+    Math.min(
+      width,
+      height
+    )*.065;
+
+
+  x.save();
+
+
+  /* Buitenrand */
+
+  x.strokeStyle =
+    "#120a06";
+
+  x.lineWidth =
+    border*.75;
+
+
+  x.strokeRect(
+    border*.32,
+    border*.32,
+    width-border*.64,
+    height-border*.64
+  );
+
+
+  /* Oude bronzen lijn */
+
+  x.strokeStyle =
+    "#80623d";
+
+  x.lineWidth =
+    Math.max(
+      2,
+      border*.12
+    );
+
+
+  x.strokeRect(
+    border*.72,
+    border*.72,
+    width-border*1.44,
+    height-border*1.44
+  );
+
+
+  /* Donkere tussenrand */
+
+  x.strokeStyle =
+    "#211109";
+
+  x.lineWidth =
+    Math.max(
+      2,
+      border*.085
+    );
+
+
+  x.strokeRect(
+    border*1.05,
+    border*1.05,
+    width-border*2.1,
+    height-border*2.1
+  );
+
+
+  /* Binnenlijn */
+
+  x.strokeStyle =
+    "#765b3a";
+
+  x.lineWidth =
+    Math.max(
+      1,
+      border*.035
+    );
+
+
+  x.strokeRect(
+    border*1.35,
+    border*1.35,
+    width-border*2.7,
+    height-border*2.7
+  );
+
+
+  /* Hoeken */
+
+  drawCorner(
+    x,
+    border*1.1,
+    border*1.1,
+    1,
+    1
+  );
+
+
+  drawCorner(
+    x,
+    width-border*1.1,
+    border*1.1,
+    -1,
+    1
+  );
+
+
+  drawCorner(
+    x,
+    border*1.1,
+    height-border*1.1,
+    1,
+    -1
+  );
+
+
+  drawCorner(
+    x,
+    width-border*1.1,
+    height-border*1.1,
+    -1,
+    -1
+  );
+
+
+  /* Bovenste boog */
+
+  x.strokeStyle =
+    "#806542";
+
+  x.lineWidth =
+    Math.max(
+      1,
+      border*.045
+    );
+
+
+  x.beginPath();
+
+
+  x.moveTo(
+    border*1.9,
+    border*1.15
+  );
+
+
+  x.quadraticCurveTo(
+    width*.5,
+    border*.35,
+    width-border*1.9,
+    border*1.15
+  );
+
+
+  x.stroke();
+
+
+  /* Onderste boog */
+
+  x.beginPath();
+
+
+  x.moveTo(
+    border*1.9,
+    height-border*1.15
+  );
+
+
+  x.quadraticCurveTo(
+    width*.5,
+    height-border*.35,
+    width-border*1.9,
+    height-border*1.15
+  );
+
+
+  x.stroke();
+
+
+  x.restore();
+
+
+  /* =====================================
+     TITEL OP FOTO
+  ===================================== */
+
+  x.save();
+
+
+  x.textAlign =
+    "center";
+
+  x.textBaseline =
+    "middle";
+
+
+  const titleSize =
+    Math.max(
+      26,
+      Math.min(
+        width*.067,
+        82
+      )
+    );
+
+
+  x.font =
+    "bold "+
+    titleSize+
+    "px Georgia, 'Times New Roman', serif";
+
+
+  /* Schaduw */
+
+  x.fillStyle =
+    "rgba(0,0,0,.85)";
+
+
+  x.fillText(
+    "HALTE PLANTSOEN",
+    width/2+4,
+    border*2.02+4
+  );
+
+
+  /* Hoofdtekst */
+
+  x.fillStyle =
+    "#d6bd8d";
+
+
+  x.fillText(
+    "HALTE PLANTSOEN",
+    width/2,
+    border*2.02
+  );
+
+
+  /* Lijntje */
+
+  x.strokeStyle =
+    "#7e623e";
+
+
+  x.lineWidth =
+    Math.max(
+      1,
+      width*.002
+    );
+
+
+  x.beginPath();
+
+
+  x.moveTo(
+    width*.30,
+    border*2.72
+  );
+
+
+  x.lineTo(
+    width*.70,
+    border*2.72
+  );
+
+
+  x.stroke();
+
+
+  x.restore();
+
+
+  /* =====================================
+     ONDERTITEL
+  ===================================== */
+
+  x.save();
+
+
+  x.textAlign =
+    "center";
+
+
+  const subtitleSize =
+    Math.max(
+      13,
+      Math.min(
+        width*.024,
+        30
+      )
+    );
+
+
+  x.font =
+    "bold "+
+    subtitleSize+
+    "px Georgia, 'Times New Roman', serif";
+
+
+  x.fillStyle =
+    "#d0b98b";
+
+
+  x.fillText(
+    "HALLOWEEN · 23 OKTOBER 2026",
+    width/2,
+    height-border*1.55
+  );
+
+
+  x.restore();
+
+
+  /* =====================================
+     ORNAMENTEN
+  ===================================== */
+
+  x.save();
+
+
+  x.textAlign =
+    "center";
+
+
+  x.fillStyle =
+    "#9a7b4e";
+
+
+  x.font =
+    Math.max(
+      18,
+      width*.025
+    )+
+    "px Georgia, serif";
+
+
+  x.fillText(
+    "❦",
+    width/2,
+    border*1.05
+  );
+
+
+  x.fillText(
+    "❦",
+    width/2,
+    height-border*.72
+  );
+
+
+  x.restore();
+
+
+  return c;
+}
+
+
+/* =========================================
+   ORNAMENTELE HOEK
+========================================= */
+
+function drawCorner(
+  c,
+  x,
+  y,
+  sx,
+  sy
+){
+
+  c.save();
+
+
+  c.translate(
+    x,
+    y
+  );
+
+
+  c.scale(
+    sx,
+    sy
+  );
+
+
+  c.strokeStyle =
+    "#96764a";
+
+
+  c.lineWidth =
+    2;
+
+
+  /* Grote krul */
+
+  c.beginPath();
+
+
+  c.moveTo(
+    0,
+    0
+  );
+
+
+  c.bezierCurveTo(
+    26,
+    2,
+    31,
+    26,
+    10,
+    34
+  );
+
+
+  c.bezierCurveTo(
+    -6,
+    40,
+    2,
+    53,
+    17,
+    47
+  );
+
+
+  c.stroke();
+
+
+  /* Tweede krul */
+
+  c.beginPath();
+
+
+  c.moveTo(
+    6,
+    5
+  );
+
+
+  c.bezierCurveTo(
+    35,
+    8,
+    44,
+    35,
+    26,
+    55
+  );
+
+
+  c.stroke();
+
+
+  /* Webachtige lijnen */
+
+  c.globalAlpha =
+    .75;
+
+
+  for(
+    let i=0;
+    i<5;
+    i++
+  ){
+
+    c.beginPath();
+
+
+    c.moveTo(
+      4,
+      9+i*9
+    );
+
+
+    c.quadraticCurveTo(
+      16,
+      5+i*10,
+      30,
+      9+i*9
+    );
+
+
+    c.stroke();
+
+  }
+
+
+  c.restore();
+
+}
+
+
+/* =========================================
+   IN WACHTRIJ ZETTEN
+========================================= */
+
+saveBtn.addEventListener(
+  "click",
+  function(){
+
+    if(
+      !processed.length
+    ){
+      return;
+    }
+
+
+    for(
+      const image of processed
+    ){
+
+      const data =
+        image.toDataURL(
+          "image/jpeg",
+          .90
+        );
+
+
+      const card =
+        document.createElement(
+          "div"
+        );
+
+
+      card.className =
+        "card";
+
+
+      const img =
+        document.createElement(
+          "img"
+        );
+
+
+      img.src =
+        data;
+
+
+      const info =
+        document.createElement(
+          "div"
+        );
+
+
+      info.className =
+        "cardInfo";
+
+
+      info.textContent =
+        "Klaar voor beoordeling";
+
+
+      card.appendChild(
+        img
+      );
+
+
+      card.appendChild(
+        info
+      );
+
+
+      queueGrid.prepend(
+        card
+      );
+
+    }
+
+
+    processed = [];
+
+
+    wrap.style.display =
+      "none";
+
+
+    filesInput.value =
+      "";
+
+
+    statusEl.textContent =
+      "Foto('s) staan nu in de wachtrij.";
+
+  }
+);
+
+
+/* =========================================
+   ANNULEREN
+========================================= */
+
+clearBtn.addEventListener(
+  "click",
+  function(){
+
+    processed = [];
+
+
+    wrap.style.display =
+      "none";
+
+
+    filesInput.value =
+      "";
+
+
+    statusEl.textContent =
+      "Kies één of meer foto's.";
+
+  }
+);
+
+
+</script>
+
+</body>
+</html>
