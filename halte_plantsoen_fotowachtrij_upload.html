@@ -62,41 +62,107 @@ const queueGrid=document.getElementById("queueGrid");
 const saveBtn=document.getElementById("save");
 const clearBtn=document.getElementById("clear");
 
-let processed=[];
+// ===== FOTO-ONTWERP — HIER KUNNEN WE LATER MAKKELIJK AANPASSEN =====
+const PHOTO_STYLE = {
+  titel: "HALTE PLANTSOEN",
+  ondertekst: "HALLOWEEN · 23 OKTOBER 2026",
+
+  // Filter: deze waarden kunnen we later aanpassen
+  sepia: 0.65,
+  saturate: 0.65,
+  contrast: 1.05,
+  brightness: 1.08,
+
+  kaderKleur: "#d8c5a0",
+  tekstKleur: "#352719"
+};
+
+let processed=[]; 
 
 function makeProcessed(img){
+function makeProcessed(img){
+
   const maxW=1800;
   const scale=Math.min(1,maxW/img.naturalWidth);
   const w=Math.round(img.naturalWidth*scale);
   const h=Math.round(img.naturalHeight*scale);
+
   const border=Math.max(70,Math.round(w*.045));
   const bottom=Math.max(180,Math.round(h*.13));
 
   canvas.width=w+border*2;
   canvas.height=h+border+bottom;
 
-  ctx.fillStyle="#d8c5a0";
+  // KADER
+  ctx.fillStyle=PHOTO_STYLE.kaderKleur;
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
+  // FOTO + FILTER
   ctx.save();
   ctx.translate(border,border);
-  ctx.filter="sepia(.30) saturate(.72) contrast(.94) brightness(1.12)";
+
+  ctx.filter=
+    "sepia("+PHOTO_STYLE.sepia+") "+
+    "saturate("+PHOTO_STYLE.saturate+") "+
+    "contrast("+PHOTO_STYLE.contrast+") "+
+    "brightness("+PHOTO_STYLE.brightness+")";
+
   ctx.drawImage(img,0,0,w,h);
   ctx.restore();
 
-  ctx.strokeStyle="rgba(65,48,30,.65)";
+  // DONKERE OUDE-FOTO-RAND
+  const vignette=ctx.createRadialGradient(
+    canvas.width/2,
+    canvas.height/2,
+    Math.min(w,h)*.20,
+    canvas.width/2,
+    canvas.height/2,
+    Math.max(w,h)*.70
+  );
+
+  vignette.addColorStop(0,"rgba(255,245,215,0)");
+  vignette.addColorStop(.72,"rgba(60,38,18,.05)");
+  vignette.addColorStop(1,"rgba(40,25,12,.30)");
+
+  ctx.fillStyle=vignette;
+  ctx.fillRect(border,border,w,h);
+
+  // BINNENRAND
+  ctx.strokeStyle="rgba(65,48,30,.72)";
   ctx.lineWidth=4;
-  ctx.strokeRect(border+2,border+2,w-4,h-4);
+  ctx.strokeRect(
+    border+2,
+    border+2,
+    w-4,
+    h-4
+  );
 
-  ctx.fillStyle="#352719";
+  // TEKST
+  ctx.fillStyle=PHOTO_STYLE.tekstKleur;
   ctx.textAlign="center";
-  ctx.font="bold "+Math.max(24,Math.round(w*.035))+"px Georgia";
-  ctx.fillText("HALTE PLANTSOEN",canvas.width/2,h+border+Math.max(55,Math.round(h*.045)));
 
-  ctx.font=Math.max(20,Math.round(w*.024))+"px Georgia";
-  ctx.fillText("HALLOWEEN · 23 OKTOBER 2026",canvas.width/2,h+border+Math.max(105,Math.round(h*.085)));
+  ctx.font=
+    "bold "+
+    Math.max(24,Math.round(w*.035))+
+    "px Georgia";
 
-  return canvas.toDataURL("image/jpeg",.92);
+  ctx.fillText(
+    PHOTO_STYLE.titel,
+    canvas.width/2,
+    h+border+Math.max(55,Math.round(h*.045))
+  );
+
+  ctx.font=
+    Math.max(20,Math.round(w*.024))+
+    "px Georgia";
+
+  ctx.fillText(
+    PHOTO_STYLE.ondertekst,
+    canvas.width/2,
+    h+border+Math.max(105,Math.round(h*.085))
+  );
+
+  return canvas.toDataURL("image/jpeg",.94);
 }
 
 function readImage(file){
