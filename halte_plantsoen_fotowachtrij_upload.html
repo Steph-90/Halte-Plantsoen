@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Halte Plantsoen — Fotowachtrij</title>
+<title>Halte Plantsoen - Fotowachtrij</title>
 
 <style>
 *{
@@ -13,64 +13,95 @@
 html,body{
   margin:0;
   padding:0;
-  background:#17130f;
-  color:#eee4d2;
+  min-height:100%;
+  background:#100d0a;
+  color:#eadcc4;
   font-family:Georgia,"Times New Roman",serif;
 }
 
 body{
-  min-height:100vh;
   background:
-    radial-gradient(circle at 50% 0%,#3a2a1c 0,#17130f 48%,#0d0b09 100%);
+    radial-gradient(
+      ellipse at top,
+      #3b2b1d 0%,
+      #17110d 45%,
+      #080706 100%
+    );
 }
 
 main{
-  width:min(1000px,94%);
-  margin:0 auto;
-  padding:24px 0 50px;
+  width:min(1050px,94%);
+  margin:auto;
+  padding:25px 0 55px;
 }
+
+/* =========================
+   HEADER
+========================= */
 
 header{
   text-align:center;
-  margin-bottom:22px;
+  margin-bottom:24px;
+}
+
+.headerOrnament{
+  color:#92744a;
+  font-size:25px;
+  letter-spacing:9px;
+  margin-bottom:7px;
 }
 
 header h1{
   margin:0;
-  font-size:clamp(30px,7vw,62px);
-  letter-spacing:3px;
-  color:#d8c49b;
+  color:#d9bf8b;
+  font-size:clamp(32px,8vw,68px);
+  letter-spacing:4px;
+  line-height:1;
   text-shadow:
-    0 2px 0 #2b1b12,
-    0 4px 12px #000;
+    2px 3px 0 #21140c,
+    0 5px 18px #000;
 }
 
 header p{
-  margin:7px 0 0;
-  color:#a89576;
+  margin:11px 0 0;
+  color:#b59d76;
   font-size:15px;
-  letter-spacing:2px;
+  letter-spacing:3px;
 }
+
+/* =========================
+   UPLOAD
+========================= */
 
 .pick{
   display:block;
   width:100%;
-  padding:17px 20px;
+  padding:18px;
   text-align:center;
   cursor:pointer;
-  border:1px solid #786143;
+
+  color:#ead5aa;
   background:
-    linear-gradient(#3b2b1d,#241910);
-  color:#e7d5ae;
-  font-weight:bold;
-  letter-spacing:1px;
+    linear-gradient(
+      180deg,
+      #493522,
+      #24170f
+    );
+
+  border:1px solid #806442;
+
   box-shadow:
-    inset 0 0 0 2px #17100b,
-    0 5px 18px #000;
+    inset 0 0 0 2px #130d08,
+    0 8px 22px #000;
 }
 
 .pick:hover{
-  background:linear-gradient(#493522,#2b1d12);
+  background:
+    linear-gradient(
+      180deg,
+      #594229,
+      #2d1d12
+    );
 }
 
 input[type=file]{
@@ -79,75 +110,106 @@ input[type=file]{
 
 #status{
   text-align:center;
-  margin:13px 0 18px;
-  color:#aa9a81;
+  color:#a9977c;
   font-size:14px;
+  margin:13px 0 20px;
 }
+
+/* =========================
+   PREVIEW
+========================= */
 
 #previewWrap{
   display:none;
-  margin-bottom:35px;
+  margin-bottom:38px;
 }
 
-.previewBox{
-  position:relative;
+.previewFrame{
   padding:12px;
-  background:#0d0a08;
-  border:1px solid #58452e;
-  box-shadow:0 10px 30px #000;
+  background:#0b0907;
+  border:1px solid #654e32;
+  box-shadow:
+    0 12px 35px #000;
 }
 
 canvas{
   display:block;
   width:100%;
   height:auto;
-  background:#111;
 }
+
+/* =========================
+   BUTTONS
+========================= */
 
 .actions{
   display:flex;
   gap:10px;
-  margin-top:12px;
+  margin-top:13px;
 }
 
 button{
   flex:1;
-  border:1px solid #6c5738;
-  background:#302115;
-  color:#ead9b7;
-  padding:14px 10px;
+  padding:15px 12px;
+
+  border:1px solid #765b38;
+
+  background:
+    linear-gradient(
+      180deg,
+      #3c291a,
+      #21140d
+    );
+
+  color:#e9d5ad;
+
   font-family:Georgia,"Times New Roman",serif;
   font-weight:bold;
+  letter-spacing:.7px;
+
   cursor:pointer;
 }
 
 button:hover{
-  background:#493522;
+  background:#503720;
 }
 
+/* =========================
+   QUEUE
+========================= */
+
 #queue{
-  margin-top:30px;
+  margin-top:35px;
 }
 
 #queue h2{
+  margin:0 0 18px;
   text-align:center;
+
+  color:#c9af7d;
+
   font-size:28px;
-  letter-spacing:2px;
-  color:#cbb58c;
-  margin-bottom:18px;
+  letter-spacing:3px;
+
+  text-shadow:
+    0 3px 10px #000;
 }
 
 .queueGrid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
-  gap:15px;
+  grid-template-columns:
+    repeat(auto-fill,minmax(190px,1fr));
+
+  gap:16px;
 }
 
 .card{
-  background:#211811;
-  border:1px solid #58452e;
+  background:#1b130d;
+  border:1px solid #5b452c;
   padding:8px;
-  box-shadow:0 7px 18px #000;
+
+  box-shadow:
+    0 8px 20px #000;
 }
 
 .card img{
@@ -158,14 +220,126 @@ button:hover{
 
 .cardInfo{
   padding:9px 3px 3px;
-  color:#a99a82;
-  font-size:12px;
+
   text-align:center;
+
+  color:#9d8b71;
+  font-size:12px;
 }
 
-/* kleine ouderwetse sierlijnen */
-.ornament{
-  text-align:center;
-  color:#88704c;
-  font-size:25px;
-  
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:600px){
+
+  main{
+    width:95%;
+    padding-top:18px;
+  }
+
+  header h1{
+    letter-spacing:2px;
+  }
+
+  .actions{
+    flex-direction:column;
+  }
+}
+</style>
+</head>
+
+
+<body>
+
+<main>
+
+<header>
+
+  <div class="headerOrnament">
+    ✦ ❦ ✦
+  </div>
+
+  <h1>
+    HALTE PLANTSOEN
+  </h1>
+
+  <p>
+    HALLOWEEN · 23 OKTOBER 2026
+  </p>
+
+</header>
+
+
+<label class="pick" for="files">
+  KIES FOTO'S VAN JE SAMSUNG
+</label>
+
+<input
+  id="files"
+  type="file"
+  accept="image/*"
+  multiple
+>
+
+
+<div id="status">
+  Kies één of meer foto's. De foto's worden op deze telefoon verwerkt.
+</div>
+
+
+<div id="previewWrap">
+
+  <div class="previewFrame">
+
+    <canvas id="canvas"></canvas>
+
+  </div>
+
+
+  <div class="actions">
+
+    <button id="save">
+      IN WACHTRIJ ZETTEN
+    </button>
+
+    <button id="clear">
+      ANNULEREN
+    </button>
+
+  </div>
+
+</div>
+
+
+<section id="queue">
+
+  <h2>
+    ✦ WACHTRIJ ✦
+  </h2>
+
+  <div
+    id="queueGrid"
+    class="queueGrid"
+  ></div>
+
+</section>
+
+</main>
+
+
+<script>
+
+/* ==========================================================
+   HALTE PLANTSOEN
+   FOTO VERWERKING
+========================================================== */
+
+
+const filesInput =
+  document.getElementById("files");
+
+const statusEl =
+  document.getElementById("status");
+
+const wrap =
