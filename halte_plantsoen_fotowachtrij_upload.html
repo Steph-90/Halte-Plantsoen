@@ -3,1226 +3,169 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>Halte Plantsoen — Fotowachtrij 1913</title>
+<title>Halte Plantsoen — Fotowachtrij</title>
 
 <style>
-
 *{
   box-sizing:border-box;
 }
 
-body{
+html,body{
   margin:0;
-  background:#120e0b;
-  color:#eee4d0;
-  font-family:Georgia,serif;
+  padding:0;
+  background:#17130f;
+  color:#eee4d2;
+  font-family:Georgia,"Times New Roman",serif;
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% 0%,#3a2a1c 0,#17130f 48%,#0d0b09 100%);
 }
 
 main{
-  max-width:900px;
-  margin:auto;
-  padding:22px;
+  width:min(1000px,94%);
+  margin:0 auto;
+  padding:24px 0 50px;
 }
 
-h1{
-  font-size:30px;
-  margin:0 0 6px;
-}
-
-.sub{
-  opacity:.75;
+header{
+  text-align:center;
   margin-bottom:22px;
 }
 
-button,
-.pick{
-  display:inline-block;
-  border:1px solid #a58a5c;
-  background:#302318;
-  color:#f3e8d2;
-  padding:12px 16px;
-  border-radius:7px;
-  font:inherit;
-  cursor:pointer;
+header h1{
+  margin:0;
+  font-size:clamp(30px,7vw,62px);
+  letter-spacing:3px;
+  color:#d8c49b;
+  text-shadow:
+    0 2px 0 #2b1b12,
+    0 4px 12px #000;
 }
 
-input{
+header p{
+  margin:7px 0 0;
+  color:#a89576;
+  font-size:15px;
+  letter-spacing:2px;
+}
+
+.pick{
+  display:block;
+  width:100%;
+  padding:17px 20px;
+  text-align:center;
+  cursor:pointer;
+  border:1px solid #786143;
+  background:
+    linear-gradient(#3b2b1d,#241910);
+  color:#e7d5ae;
+  font-weight:bold;
+  letter-spacing:1px;
+  box-shadow:
+    inset 0 0 0 2px #17100b,
+    0 5px 18px #000;
+}
+
+.pick:hover{
+  background:linear-gradient(#493522,#2b1d12);
+}
+
+input[type=file]{
   display:none;
 }
 
 #status{
-  margin:16px 0;
-  min-height:24px;
+  text-align:center;
+  margin:13px 0 18px;
+  color:#aa9a81;
+  font-size:14px;
 }
 
 #previewWrap{
   display:none;
-  background:#241810;
-  padding:16px;
-  border-radius:12px;
+  margin-bottom:35px;
+}
+
+.previewBox{
+  position:relative;
+  padding:12px;
+  background:#0d0a08;
+  border:1px solid #58452e;
+  box-shadow:0 10px 30px #000;
 }
 
 canvas{
   display:block;
   width:100%;
   height:auto;
-  background:#21150e;
+  background:#111;
 }
 
 .actions{
   display:flex;
   gap:10px;
-  flex-wrap:wrap;
-  margin-top:14px;
+  margin-top:12px;
+}
+
+button{
+  flex:1;
+  border:1px solid #6c5738;
+  background:#302115;
+  color:#ead9b7;
+  padding:14px 10px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#493522;
 }
 
 #queue{
-  margin-top:28px;
+  margin-top:30px;
+}
+
+#queue h2{
+  text-align:center;
+  font-size:28px;
+  letter-spacing:2px;
+  color:#cbb58c;
+  margin-bottom:18px;
 }
 
 .queueGrid{
   display:grid;
-  grid-template-columns:
-    repeat(auto-fill,minmax(150px,1fr));
-  gap:12px;
+  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:15px;
 }
 
 .card{
-  background:#241810;
+  background:#211811;
+  border:1px solid #58452e;
   padding:8px;
-  border-radius:8px;
+  box-shadow:0 7px 18px #000;
 }
 
 .card img{
+  display:block;
   width:100%;
-  display:block;
+  height:auto;
 }
 
-.card small{
-  display:block;
-  margin-top:6px;
-  opacity:.75;
+.cardInfo{
+  padding:9px 3px 3px;
+  color:#a99a82;
+  font-size:12px;
+  text-align:center;
 }
 
-.note{
-  font-size:14px;
-  opacity:.65;
-  line-height:1.5;
-  margin-top:18px;
-}
-
-</style>
-</head>
-
-
-<body>
-
-<main>
-
-<h1>Halte Plantsoen</h1>
-
-<div class="sub">
-Fotowachtrij · 1913 · Halloween 23 oktober 2026
-</div>
-
-
-<label class="pick" for="files">
-KIES FOTO'S VAN JE SAMSUNG
-</label>
-
-<input
-  id="files"
-  type="file"
-  accept="image/*"
-  multiple
->
-
-
-<div id="status">
-Kies één of meer foto's. De foto's worden op deze telefoon verwerkt.
-</div>
-
-
-<div id="previewWrap">
-
-  <canvas id="canvas"></canvas>
-
-  <div class="actions">
-
-    <button id="save">
-      IN WACHTRIJ ZETTEN
-    </button>
-
-    <button id="clear">
-      ANNULEREN
-    </button>
-
-  </div>
-
-</div>
-
-
-<section id="queue">
-
-<h2>Wachtrij</h2>
-
-<div
-  id="queueGrid"
-  class="queueGrid">
-</div>
-
-</section>
-
-
-<div class="note">
-
-De originele Samsung-foto wordt niet veranderd.
-De site maakt een nieuwe versie met een oude
-1913-fotografie uitstraling.
-
-</div>
-
-</main>
-
-
-<script>
-
-/* =========================================================
-   BASIS
-   ========================================================= */
-
-const filesInput =
-  document.getElementById("files");
-
-const statusEl =
-  document.getElementById("status");
-
-const wrap =
-  document.getElementById("previewWrap");
-
-const canvas =
-  document.getElementById("canvas");
-
-const ctx =
-  canvas.getContext("2d");
-
-const queueGrid =
-  document.getElementById("queueGrid");
-
-const saveBtn =
-  document.getElementById("save");
-
-const clearBtn =
-  document.getElementById("clear");
-
-
-let processed = [];
-
-
-/* =========================================================
-   OUDE FOTO MAKEN
-   ========================================================= */
-
-function makeProcessed(img){
-
-  const maxW = 1800;
-
-  const scale =
-    Math.min(
-      1,
-      maxW / img.naturalWidth
-    );
-
-  const w =
-    Math.round(
-      img.naturalWidth * scale
-    );
-
-  const h =
-    Math.round(
-      img.naturalHeight * scale
-    );
-
-
-  /*
-    Geen enorme beige rand meer.
-    De foto krijgt een donkere,
-    verweerde omlijsting.
-  */
-
-  const border =
-    Math.max(
-      42,
-      Math.round(w * .028)
-    );
-
-
-  const bottom =
-    Math.max(
-      230,
-      Math.round(h * .18)
-    );
-
-
-  canvas.width =
-    w + border * 2;
-
-  canvas.height =
-    h + border + bottom;
-
-
-  /* =======================================================
-     DONKERE ACHTERGROND
-     ======================================================= */
-
-  ctx.fillStyle =
-    "#21140d";
-
-  ctx.fillRect(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
-
-  /* =======================================================
-     FOTO-CANVAS
-     ======================================================= */
-
-  const photo =
-    document.createElement("canvas");
-
-  photo.width = w;
-  photo.height = h;
-
-  const pctx =
-    photo.getContext("2d");
-
-
-  pctx.drawImage(
-    img,
-    0,
-    0,
-    w,
-    h
-  );
-
-
-  /* =======================================================
-     OUDE KLEURENFILM
-     ======================================================= */
-
-  const imageData =
-    pctx.getImageData(
-      0,
-      0,
-      w,
-      h
-    );
-
-  const pixels =
-    imageData.data;
-
-
-  for(
-    let i = 0;
-    i < pixels.length;
-    i += 4
-  ){
-
-    let r = pixels[i];
-    let g = pixels[i + 1];
-    let b = pixels[i + 2];
-
-
-    /*
-      Eerst iets zachtere kleuren.
-      De originele kleuren blijven bewust
-      duidelijk aanwezig.
-    */
-
-    const average =
-      (r + g + b) / 3;
-
-
-    r =
-      average +
-      (r - average) * .84;
-
-    g =
-      average +
-      (g - average) * .84;
-
-    b =
-      average +
-      (b - average) * .84;
-
-
-    /*
-      Warme oude emulsie.
-    */
-
-    r = r * 1.075 + 4;
-    g = g * .995 + 2;
-    b = b * .88;
-
-
-    /*
-      Zwart wordt niet helemaal zwart.
-      Daardoor krijgt de foto die
-      oude afdruk-uitstraling.
-    */
-
-    r =
-      18 +
-      (r - 18) * .94;
-
-    g =
-      15 +
-      (g - 15) * .94;
-
-    b =
-      11 +
-      (b - 11) * .94;
-
-
-    /*
-      Oude filmkorrel.
-    */
-
-    const grain =
-      (Math.random() - .5) * 22;
-
-
-    r += grain;
-    g += grain;
-    b += grain;
-
-
-    pixels[i] =
-      Math.max(
-        0,
-        Math.min(255,r)
-      );
-
-    pixels[i + 1] =
-      Math.max(
-        0,
-        Math.min(255,g)
-      );
-
-    pixels[i + 2] =
-      Math.max(
-        0,
-        Math.min(255,b)
-      );
-  }
-
-
-  pctx.putImageData(
-    imageData,
-    0,
-    0
-  );
-
-
-  /* =======================================================
-     FOTO OP HOOFDCANVAS
-     ======================================================= */
-
-  ctx.drawImage(
-    photo,
-    border,
-    border
-  );
-
-
-  /* =======================================================
-     WARME FILM-LAAG
-     ======================================================= */
-
-  ctx.save();
-
-  ctx.globalAlpha = .13;
-
-  ctx.fillStyle =
-    "#b8874d";
-
-  ctx.fillRect(
-    border,
-    border,
-    w,
-    h
-  );
-
-  ctx.restore();
-
-
-  /* =======================================================
-     LICHTE VERKLEURING
-     ======================================================= */
-
-  const wash =
-    ctx.createLinearGradient(
-      border,
-      border,
-      border + w,
-      border + h
-    );
-
-  wash.addColorStop(
-    0,
-    "rgba(225,190,125,.12)"
-  );
-
-  wash.addColorStop(
-    .45,
-    "rgba(180,120,65,.02)"
-  );
-
-  wash.addColorStop(
-    1,
-    "rgba(55,25,10,.13)"
-  );
-
-  ctx.fillStyle =
-    wash;
-
-  ctx.fillRect(
-    border,
-    border,
-    w,
-    h
-  );
-
-
-  /* =======================================================
-     OUDE DONKERE HOEKEN
-     ======================================================= */
-
-  const vignette =
-    ctx.createRadialGradient(
-      canvas.width / 2,
-      border + h / 2,
-      Math.min(w,h) * .20,
-      canvas.width / 2,
-      border + h / 2,
-      Math.max(w,h) * .74
-    );
-
-
-  vignette.addColorStop(
-    0,
-    "rgba(0,0,0,0)"
-  );
-
-  vignette.addColorStop(
-    .55,
-    "rgba(0,0,0,.02)"
-  );
-
-  vignette.addColorStop(
-    .78,
-    "rgba(35,16,5,.15)"
-  );
-
-  vignette.addColorStop(
-    1,
-    "rgba(5,2,1,.68)"
-  );
-
-
-  ctx.fillStyle =
-    vignette;
-
-  ctx.fillRect(
-    border,
-    border,
-    w,
-    h
-  );
-
-
-  /* =======================================================
-     OUDE VLEKKEN
-     ======================================================= */
-
-  ctx.save();
-
-  for(
-    let i = 0;
-    i < 55;
-    i++
-  ){
-
-    const x =
-      border +
-      Math.random() * w;
-
-    const y =
-      border +
-      Math.random() * h;
-
-    const radius =
-      2 +
-      Math.random() * 22;
-
-
-    ctx.globalAlpha =
-      .025 +
-      Math.random() * .09;
-
-
-    ctx.fillStyle =
-      i % 2 === 0
-      ? "#382013"
-      : "#d7b77b";
-
-
-    ctx.beginPath();
-
-    ctx.arc(
-      x,
-      y,
-      radius,
-      0,
-      Math.PI * 2
-    );
-
-    ctx.fill();
-  }
-
-  ctx.restore();
-
-
-  /* =======================================================
-     VERTICALE OUDE FILMKRASSEN
-     ======================================================= */
-
-  ctx.save();
-
-  for(
-    let i = 0;
-    i < 35;
-    i++
-  ){
-
-    const x =
-      border +
-      Math.random() * w;
-
-    const y =
-      border +
-      Math.random() * h;
-
-    const lengte =
-      20 +
-      Math.random() * 160;
-
-
-    ctx.globalAlpha =
-      .04 +
-      Math.random() * .12;
-
-    ctx.lineWidth =
-      Math.random() < .8
-      ? 1
-      : 2;
-
-
-    ctx.strokeStyle =
-      i % 3 === 0
-      ? "#f0d9a4"
-      : "#2b150b";
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      x,
-      y
-    );
-
-    ctx.lineTo(
-      x +
-      (Math.random() * 12 - 6),
-      y + lengte
-    );
-
-    ctx.stroke();
-  }
-
-  ctx.restore();
-
-
-  /* =======================================================
-     KLEINE FILMSTOFJES
-     ======================================================= */
-
-  ctx.save();
-
-  for(
-    let i = 0;
-    i < 100;
-    i++
-  ){
-
-    const x =
-      border +
-      Math.random() * w;
-
-    const y =
-      border +
-      Math.random() * h;
-
-
-    ctx.globalAlpha =
-      .08 +
-      Math.random() * .12;
-
-
-    ctx.fillStyle =
-      "#ead7ae";
-
-
-    ctx.fillRect(
-      x,
-      y,
-      1 + Math.random() * 2,
-      1 + Math.random() * 2
-    );
-  }
-
-  ctx.restore();
-
-
-  /* =======================================================
-     FOTO RAND
-     ======================================================= */
-
-  ctx.strokeStyle =
-    "#160b06";
-
-  ctx.lineWidth = 7;
-
-  ctx.strokeRect(
-    border,
-    border,
-    w,
-    h
-  );
-
-
-  ctx.strokeStyle =
-    "rgba(218,184,120,.65)";
-
-  ctx.lineWidth = 2;
-
-  ctx.strokeRect(
-    border + 9,
-    border + 9,
-    w - 18,
-    h - 18
-  );
-
-
-  /* =======================================================
-     ONDERSTE KADER
-     ======================================================= */
-
-  ctx.fillStyle =
-    "#735335";
-
-  ctx.fillRect(
-    border,
-    border + h,
-    w,
-    bottom
-  );
-
-
-  /* =======================================================
-     TEXTUUR IN KADER
-     ======================================================= */
-
-  ctx.save();
-
-  for(
-    let i = 0;
-    i < 45;
-    i++
-  ){
-
-    const x =
-      border +
-      Math.random() * w;
-
-    const y =
-      border +
-      h +
-      Math.random() * bottom;
-
-    const radius =
-      2 +
-      Math.random() * 13;
-
-
-    ctx.globalAlpha =
-      .04 +
-      Math.random() * .10;
-
-
-    ctx.fillStyle =
-      i % 2
-      ? "#241109"
-      : "#c6a36b";
-
-
-    ctx.beginPath();
-
-    ctx.arc(
-      x,
-      y,
-      radius,
-      0,
-      Math.PI * 2
-    );
-
-    ctx.fill();
-  }
-
-  ctx.restore();
-
-
-  /* =======================================================
-     DECORATIEVE HALLOWEENRAND
-     ======================================================= */
-
-  ctx.strokeStyle =
-    "#241109";
-
-  ctx.lineWidth = 2;
-
-
-  const decoY =
-    border +
-    h +
-    28;
-
-
-  /*
-    Links ornament
-  */
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    border + 22,
-    decoY
-  );
-
-  ctx.bezierCurveTo(
-    border + 45,
-    decoY - 17,
-    border + 60,
-    decoY + 17,
-    border + 82,
-    decoY
-  );
-
-  ctx.bezierCurveTo(
-    border + 104,
-    decoY - 17,
-    border + 124,
-    decoY + 17,
-    border + 150,
-    decoY
-  );
-
-  ctx.stroke();
-
-
-  /*
-    Rechts ornament
-  */
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    canvas.width - border - 22,
-    decoY
-  );
-
-  ctx.bezierCurveTo(
-    canvas.width - border - 45,
-    decoY - 17,
-    canvas.width - border - 60,
-    decoY + 17,
-    canvas.width - border - 82,
-    decoY
-  );
-
-  ctx.bezierCurveTo(
-    canvas.width - border - 104,
-    decoY - 17,
-    canvas.width - border - 124,
-    decoY + 17,
-    canvas.width - border - 150,
-    decoY
-  );
-
-  ctx.stroke();
-
-
-  /* =======================================================
-     GROTE TITEL
-     ======================================================= */
-
-  ctx.fillStyle =
-    "#1c0d08";
-
-  ctx.textAlign =
-    "center";
-
-
-  ctx.font =
-    "bold " +
-    Math.max(
-      38,
-      Math.round(w * .061)
-    ) +
-    "px Georgia";
-
-
-  ctx.fillText(
-    "HALTE PLANTSOEN",
-    canvas.width / 2,
-    border +
-    h +
-    Math.max(
-      94,
-      Math.round(h * .070)
-    )
-  );
-
-
-  /* =======================================================
-     DATUM
-     ======================================================= */
-
-  ctx.font =
-    Math.max(
-      22,
-      Math.round(w * .028)
-    ) +
-    "px Georgia";
-
-
-  ctx.fillText(
-    "HALLOWEEN · 23 OKTOBER 2026",
-    canvas.width / 2,
-    border +
-    h +
-    Math.max(
-      145,
-      Math.round(h * .108)
-    )
-  );
-
-
-  /* =======================================================
-     ONDERSTE ORNAMENT
-     ======================================================= */
-
-  const ornamentY =
-    canvas.height - 24;
-
-
-  ctx.strokeStyle =
-    "#241109";
-
-  ctx.lineWidth = 2;
-
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    canvas.width / 2 - 100,
-    ornamentY
-  );
-
-  ctx.lineTo(
-    canvas.width / 2 - 18,
-    ornamentY
-  );
-
-  ctx.stroke();
-
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    canvas.width / 2 + 18,
-    ornamentY
-  );
-
-  ctx.lineTo(
-    canvas.width / 2 + 100,
-    ornamentY
-  );
-
-  ctx.stroke();
-
-
-  ctx.beginPath();
-
-  ctx.arc(
-    canvas.width / 2,
-    ornamentY,
-    6,
-    0,
-    Math.PI * 2
-  );
-
-  ctx.stroke();
-
-
-  return canvas.toDataURL(
-    "image/jpeg",
-    .94
-  );
-}
-
-
-/* =========================================================
-   FOTO INLEZEN
-   ========================================================= */
-
-function readImage(file){
-
-  return new Promise(
-    (resolve,reject)=>{
-
-      const reader =
-        new FileReader();
-
-
-      reader.onload = () => {
-
-        const img =
-          new Image();
-
-
-        img.onload =
-          () => resolve(img);
-
-        img.onerror =
-          reject;
-
-
-        img.src =
-          reader.result;
-      };
-
-
-      reader.onerror =
-        reject;
-
-
-      reader.readAsDataURL(file);
-    }
-  );
-}
-
-
-/* =========================================================
-   FOTO KIEZEN
-   ========================================================= */
-
-filesInput.addEventListener(
-  "change",
-  async () => {
-
-    if(
-      !filesInput.files.length
-    ){
-      return;
-    }
-
-
-    statusEl.textContent =
-      "Foto's verwerken…";
-
-
-    processed = [];
-
-
-    wrap.style.display =
-      "none";
-
-
-    try{
-
-      for(
-        const file of filesInput.files
-      ){
-
-        const img =
-          await readImage(file);
-
-
-        processed.push(
-          makeProcessed(img)
-        );
-      }
-
-
-      if(processed.length){
-
-        const preview =
-          new Image();
-
-
-        preview.onload = () => {
-
-          canvas.width =
-            preview.naturalWidth;
-
-          canvas.height =
-            preview.naturalHeight;
-
-
-          ctx.drawImage(
-            preview,
-            0,
-            0
-          );
-        };
-
-
-        preview.src =
-          processed[0];
-
-
-        wrap.style.display =
-          "block";
-
-
-        statusEl.textContent =
-          processed.length +
-          " foto" +
-          (
-            processed.length === 1
-            ? ""
-            : "’s"
-          ) +
-          " verwerkt. Controleer de eerste foto.";
-      }
-
-    }catch(error){
-
-      console.error(error);
-
-      statusEl.textContent =
-        "Er ging iets mis met het inladen van de foto.";
-    }
-  }
-);
-
-
-/* =========================================================
-   IN WACHTRIJ ZETTEN
-   ========================================================= */
-
-saveBtn.addEventListener(
-  "click",
-  () => {
-
-    if(
-      !processed.length
-    ){
-      return;
-    }
-
-
-    for(
-      const data of processed
-    ){
-
-      const card =
-        document.createElement("div");
-
-      card.className =
-        "card";
-
-
-      const img =
-        document.createElement("img");
-
-      img.src =
-        data;
-
-
-      const small =
-        document.createElement("small");
-
-      small.textContent =
-        "Wacht op goedkeuring";
-
-
-      card.appendChild(img);
-
-      card.appendChild(small);
-
-      queueGrid.prepend(card);
-    }
-
-
-    statusEl.textContent =
-      processed.length +
-      " foto" +
-      (
-        processed.length === 1
-        ? ""
-        : "’s"
-      ) +
-      " staan in de wachtrij.";
-
-
-    processed = [];
-
-    filesInput.value = "";
-
-    wrap.style.display =
-      "none";
-  }
-);
-
-
-/* =========================================================
-   ANNULEREN
-   ========================================================= */
-
-clearBtn.addEventListener(
-  "click",
-  () => {
-
-    processed = [];
-
-    filesInput.value = "";
-
-    wrap.style.display =
-      "none";
-
-
-    statusEl.textContent =
-      "Kies één of meer foto's.";
-  }
-);
-
-</script>
-
-</body>
-</html>
+/* kleine ouderwetse sierlijnen */
+.ornament{
+  text-align:center;
+  color:#88704c;
+  font-size:25px;
+  
