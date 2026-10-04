@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>Halte Plantsoen - Fotowachtrij</title>
 
 <style>
@@ -17,78 +18,100 @@ html,body{
 }
 
 body{
-  background:
-    radial-gradient(circle at 50% 0,#3a2818 0,#160e09 48%,#070504 100%);
+  padding:20px;
 }
 
-main{
-  width:min(1000px,94%);
-  margin:auto;
-  padding:22px 0 50px;
-}
-
-header{
-  text-align:center;
-  margin-bottom:24px;
-}
-
-.orn{
-  color:#a67c45;
-  font-size:25px;
-  letter-spacing:10px;
-}
-
-header h1{
-  margin:5px 0 8px;
-  color:#d9bd86;
-  font-size:clamp(34px,8vw,68px);
-  letter-spacing:3px;
-  line-height:1;
-  text-shadow:3px 4px #211109,0 8px 20px #000;
-}
-
-header p{
+h1{
   margin:0;
-  color:#b89b6b;
+  text-align:center;
+  font-size:32px;
+  letter-spacing:4px;
+  color:#ead7b0;
+  text-shadow:2px 2px 0 #21140e;
+}
+
+.sub{
+  text-align:center;
+  margin:6px 0 25px;
+  letter-spacing:2px;
   font-size:15px;
-  letter-spacing:3px;
 }
 
-#files{
-  position:absolute;
-  width:1px;
-  height:1px;
-  opacity:0;
+.panel{
+  max-width:900px;
+  margin:auto;
 }
 
-.pick{
-  display:block;
+.controls{
+  background:#17100d;
+  border:1px solid #70533b;
   padding:18px;
+  box-shadow:0 0 25px #000;
+}
+
+label.pick,
+button{
+  display:block;
+  width:100%;
+  border:1px solid #9a744d;
+  background:#302016;
+  color:#f1dfb7;
+  padding:14px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:16px;
   text-align:center;
   cursor:pointer;
-  color:#ead4aa;
-  font-size:18px;
-  font-weight:bold;
-  background:linear-gradient(#4a321e,#21130b);
-  border:2px solid #80603a;
-  box-shadow:inset 0 0 0 3px #140b06,0 8px 20px #000;
+  margin-top:10px;
+}
+
+label.pick:hover,
+button:hover{
+  background:#493020;
+}
+
+input[type=file]{
+  display:none;
+}
+
+.settings{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:15px;
+}
+
+.settings label{
+  font-size:13px;
+  letter-spacing:1px;
+}
+
+.settings input{
+  width:100%;
+  margin-top:5px;
+  padding:10px;
+  background:#0c0806;
+  color:#ead7b0;
+  border:1px solid #60462f;
+  font-family:Georgia,"Times New Roman",serif;
 }
 
 #status{
   text-align:center;
-  margin:13px 0 20px;
-  color:#ad9875;
+  margin:15px 0;
+  color:#c9b18a;
 }
 
 #previewWrap{
   display:none;
+  margin-top:25px;
 }
 
 .preview{
+  width:100%;
+  background:#090605;
   padding:10px;
-  background:#080604;
-  border:1px solid #745331;
-  box-shadow:0 12px 35px #000;
+  border:1px solid #59402d;
+  box-shadow:0 0 30px #000;
 }
 
 canvas{
@@ -98,185 +121,183 @@ canvas{
 }
 
 .actions{
-  display:flex;
-  gap:12px;
-  margin-top:14px;
-}
-
-button{
-  flex:1;
-  padding:16px;
-  color:#ead4aa;
-  background:linear-gradient(#49311d,#21130b);
-  border:2px solid #80603a;
-  font:bold 17px Georgia,serif;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
 }
 
 #queue{
-  margin-top:40px;
+  margin:35px auto 0;
+  max-width:900px;
 }
 
 #queue h2{
   text-align:center;
-  color:#d0b37d;
-  font-size:30px;
-  letter-spacing:3px;
+  letter-spacing:4px;
+  font-size:22px;
+  border-bottom:1px solid #60462f;
+  padding-bottom:12px;
 }
 
 .queueGrid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
-  gap:15px;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:18px;
 }
 
 .card{
-  background:#17100b;
+  background:#17100d;
+  border:1px solid #60462f;
   padding:8px;
-  border:1px solid #65482b;
 }
 
 .card img{
-  width:100%;
   display:block;
+  width:100%;
+  height:auto;
 }
 
-.cardInfo{
-  text-align:center;
-  padding:8px;
-  color:#a18c6b;
+.card button{
+  margin:8px 0 0;
+  font-size:14px;
+  padding:9px;
+}
+
+.hint{
   font-size:12px;
+  color:#9f8a6c;
+  text-align:center;
+  margin-top:10px;
 }
 
 @media(max-width:600px){
-  .actions{flex-direction:column}
+  body{padding:12px}
+  h1{font-size:25px}
+  .settings{grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
 
-<main>
+<div class="panel">
 
-<header>
-  <div class="orn">✦ ❦ ✦</div>
-  <h1>HALTE PLANTSOEN</h1>
-  <p>HALLOWEEN · 23 OKTOBER 2026</p>
-</header>
+<h1>HALTE PLANTSOEN</h1>
+
+<div class="sub">
+HALLOWEEN · 23 OKTOBER 2026
+</div>
+
+<div class="controls">
 
 <input id="files" type="file" accept="image/*" multiple>
 
 <label class="pick" for="files">
-  KIES FOTO'S VAN JE SAMSUNG
+KIES FOTO'S VAN JE SAMSUNG
 </label>
 
+<div class="settings">
+
+<label>
+Titel
+<input id="titleInput" value="HALTE PLANTSOEN">
+</label>
+
+<label>
+Ondertitel
+<input id="dateInput" value="HALLOWEEN · 23 OKTOBER 2026">
+</label>
+
+</div>
+
 <div id="status">
-  Kies één of meer foto's.
+Kies één of meer foto's.
+</div>
+
 </div>
 
 <div id="previewWrap">
 
-  <div class="preview">
-    <canvas id="canvas"></canvas>
-  </div>
+<div class="preview">
+<canvas id="canvas"></canvas>
+</div>
 
-  <div class="actions">
-    <button id="save">IN WACHTRIJ ZETTEN</button>
-    <button id="clear">ANNULEREN</button>
-  </div>
+<div class="actions">
+<button id="save">IN WACHTRIJ ZETTEN</button>
+<button id="clear">ANNULEREN</button>
+</div>
+
+<div class="hint">
+De foto wordt eerst als oude gevonden foto verwerkt.
+</div>
+
+</div>
 
 </div>
 
 <section id="queue">
-  <h2>✦ WACHTRIJ ✦</h2>
-  <div id="queueGrid" class="queueGrid"></div>
+
+<h2>✦ WACHTRIJ ✦</h2>
+
+<div id="queueGrid" class="queueGrid"></div>
+
 </section>
 
-</main>
 
 <script>
 
-const filesInput=document.getElementById("files");
-const statusEl=document.getElementById("status");
-const wrap=document.getElementById("previewWrap");
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
-const queueGrid=document.getElementById("queueGrid");
-const saveBtn=document.getElementById("save");
-const clearBtn=document.getElementById("clear");
+const filesInput = document.getElementById("files");
+const statusEl = document.getElementById("status");
+const previewWrap = document.getElementById("previewWrap");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-let processed=[];
+const saveBtn = document.getElementById("save");
+const clearBtn = document.getElementById("clear");
+
+const titleInput = document.getElementById("titleInput");
+const dateInput = document.getElementById("dateInput");
+
+const queueGrid = document.getElementById("queueGrid");
+
+let currentImage = null;
+let currentFileName = "";
+let queue = [];
 
 
-/* FOTO KIEZEN */
+/* =========================================================
+   FOTO KIEZEN
+========================================================= */
 
-filesInput.addEventListener("change",async()=>{
+filesInput.addEventListener("change", function(){
 
-  const files=[...filesInput.files];
+  if(!this.files || !this.files.length) return;
 
-  if(!files.length)return;
+  const file = this.files[0];
 
-  statusEl.textContent="Foto wordt verwerkt...";
+  currentFileName = file.name;
 
-  processed=[];
+  const url = URL.createObjectURL(file);
 
-  for(const file of files){
+  const img = new Image();
 
-    const img=await loadImage(file);
+  img.onload = function(){
 
-    processed.push(makeOldPhoto(img));
+    currentImage = img;
 
-  }
+    makeOldPhoto(img);
 
-  show(processed[0]);
+    previewWrap.style.display = "block";
 
-  wrap.style.display="block";
+    statusEl.textContent =
+      "Foto klaar om te bekijken: " + file.name;
 
-  statusEl.textContent=
-    processed.length===1
-      ?"Foto klaar om te bekijken."
-      :processed.length+" foto's klaar.";
+    URL.revokeObjectURL(url);
+  };
+
+  img.src = url;
 
 });
-
-
-/* FOTO LADEN */
-
-function loadImage(file){
-
-  return new Promise((resolve,reject)=>{
-
-    const url=URL.createObjectURL(file);
-    const img=new Image();
-
-    img.onload=()=>{
-      URL.revokeObjectURL(url);
-      resolve(img);
-    };
-
-    img.onerror=reject;
-    img.src=url;
-
-  });
-
-}
-
-
-/* TONEN */
-
-function show(img){
-
-  canvas.width=img.width;
-  canvas.height=img.height;
-
-  ctx.clearRect(
-    0,0,
-    canvas.width,
-    canvas.height
-  );
-
-  ctx.drawImage(img,0,0);
-
-}
 
 
 /* =========================================================
@@ -285,773 +306,489 @@ function show(img){
 
 function makeOldPhoto(img){
 
-  let w=img.naturalWidth;
-  let h=img.naturalHeight;
+  const maxWidth = 1000;
 
-  const max=1600;
+  let w = img.naturalWidth;
+  let h = img.naturalHeight;
 
-  if(w>max){
-
-    const scale=max/w;
-
-    w=Math.round(w*scale);
-    h=Math.round(h*scale);
-
+  if(w > maxWidth){
+    h = Math.round(h * maxWidth / w);
+    w = maxWidth;
   }
+
+  /*
+    Ruimte rondom de foto.
+    Onderaan extra ruimte voor het oude papieren tekstgedeelte.
+  */
+
+  const border = Math.round(w * 0.055);
+
+  const paperHeight = Math.round(w * 0.24);
+
+  const outW = w + border * 2;
+  const outH = h + border * 2 + paperHeight;
+
+  canvas.width = outW;
+  canvas.height = outH;
+
+  ctx.clearRect(0,0,outW,outH);
+
+
+  /* ---------------------------------------------------------
+     OUDE PAPIEREN ACHTERGROND
+  --------------------------------------------------------- */
+
+  const paper = ctx.createLinearGradient(0,0,0,outH);
+
+  paper.addColorStop(0,"#8b7355");
+  paper.addColorStop(.45,"#b19a72");
+  paper.addColorStop(1,"#725c43");
+
+  ctx.fillStyle = paper;
+  ctx.fillRect(0,0,outW,outH);
+
+
+  /* ---------------------------------------------------------
+     ONREGELMATIGE DONKERE RAND
+  --------------------------------------------------------- */
+
+  ctx.save();
+
+  ctx.fillStyle = "#211710";
+
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.lineTo(outW,0);
+  ctx.lineTo(outW,outH);
+  ctx.lineTo(0,outH);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.restore();
 
 
   /*
-     De poster is maar iets hoger dan de originele foto.
-     Daardoor blijft de foto groot.
+    Oude foto iets naar binnen.
   */
 
-  const outer=22;
+  const px = border;
+  const py = border;
 
-  const bottom=Math.round(h*.19);
+  ctx.save();
 
-  const totalH=h+bottom;
-
-
-  const c=document.createElement("canvas");
-
-  c.width=w+outer*2;
-  c.height=totalH+outer*2;
-
-  const x=c.getContext("2d");
-
-
-  /* =======================================================
-     OUDE DONKERE BASIS
-  ======================================================= */
-
-  x.fillStyle="#3b2413";
-
-  x.fillRect(
-    0,
-    0,
-    c.width,
-    c.height
-  );
-
+  ctx.beginPath();
+  ctx.rect(px,py,w,h);
+  ctx.clip();
 
   /*
-     oude papierkleur langs de rand
+    Eerst originele foto.
+    We houden de kleuren bewust zichtbaar.
   */
 
-  x.fillStyle="#9c7140";
+  ctx.filter =
+    "sepia(18%) contrast(108%) saturate(78%) brightness(92%)";
 
-  x.fillRect(
-    outer,
-    outer,
-    w,
-    totalH
+  ctx.drawImage(img,px,py,w,h);
+
+  ctx.filter = "none";
+
+
+  /* ---------------------------------------------------------
+     LICHTE OUDE FOTO TEXTUUR
+  --------------------------------------------------------- */
+
+  const shade = ctx.createRadialGradient(
+    px+w/2,
+    py+h/2,
+    Math.min(w,h)*.15,
+    px+w/2,
+    py+h/2,
+    Math.max(w,h)*.75
   );
 
+  shade.addColorStop(0,"rgba(255,240,205,0)");
+  shade.addColorStop(.65,"rgba(40,20,10,.05)");
+  shade.addColorStop(1,"rgba(15,8,5,.38)");
 
-  /* =======================================================
-     FOTO
-  ======================================================= */
-
-  x.drawImage(
-    img,
-    outer,
-    outer,
-    w,
-    h
-  );
+  ctx.fillStyle = shade;
+  ctx.fillRect(px,py,w,h);
 
 
-  /* =======================================================
-     KLEUR: OUDER, MAAR NIET BRUIN
-  ======================================================= */
+  /* ---------------------------------------------------------
+     OUDE KRASJES
+  --------------------------------------------------------- */
 
-  const pixels=x.getImageData(
-    outer,
-    outer,
-    w,
-    h
-  );
+  ctx.globalAlpha = .22;
+  ctx.strokeStyle = "#f3e3c0";
+  ctx.lineWidth = 1;
 
-  const d=pixels.data;
+  for(let i=0;i<18;i++){
 
+    const x = px + Math.random()*w;
+    const y = py + Math.random()*h;
 
-  for(let i=0;i<d.length;i+=4){
-
-    let r=d[i];
-    let g=d[i+1];
-    let b=d[i+2];
-
-
-    /*
-       lichte warme emulsie
-    */
-
-    r=r*1.035;
-    g=g*.99;
-    b=b*.94;
-
-
-    /*
-       iets minder moderne kleur
-    */
-
-    const grey=(r+g+b)/3;
-
-    r=r*.90+grey*.10;
-    g=g*.90+grey*.10;
-    b=b*.90+grey*.10;
-
-
-    /*
-       oud contrast
-    */
-
-    r=(r-128)*1.07+128;
-    g=(g-128)*1.07+128;
-    b=(b-128)*1.07+128;
-
-
-    d[i]=Math.max(0,Math.min(255,r));
-    d[i+1]=Math.max(0,Math.min(255,g));
-    d[i+2]=Math.max(0,Math.min(255,b));
-
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.lineTo(
+      x + (Math.random()*12-6),
+      y + Math.random()*90
+    );
+    ctx.stroke();
   }
 
+  ctx.globalAlpha = 1;
 
-  x.putImageData(
-    pixels,
-    outer,
-    outer
-  );
+  ctx.restore();
 
 
-  /* =======================================================
-     ZACHTE OUDE FOTO-VIGNET
-  ======================================================= */
+  /* ---------------------------------------------------------
+     DONKERE FOTO-RAND
+  --------------------------------------------------------- */
 
-  const vignette=x.createRadialGradient(
-    c.width/2,
-    outer+h*.48,
-    Math.min(w,h)*.25,
-    c.width/2,
-    outer+h*.48,
-    Math.max(w,h)*.72
-  );
+  ctx.strokeStyle = "#302017";
+  ctx.lineWidth = Math.max(5,border*.32);
 
-  vignette.addColorStop(
-    0,
-    "rgba(0,0,0,0)"
-  );
-
-  vignette.addColorStop(
-    .72,
-    "rgba(35,15,5,.03)"
-  );
-
-  vignette.addColorStop(
-    1,
-    "rgba(8,3,1,.48)"
-  );
-
-  x.fillStyle=vignette;
-
-  x.fillRect(
-    outer,
-    outer,
+  ctx.strokeRect(
+    px,
+    py,
     w,
     h
   );
 
 
-  /* =======================================================
-     FILMGRAIN
-  ======================================================= */
+  /* ---------------------------------------------------------
+     PAPIEREN STROOK ONDERAAN
+  --------------------------------------------------------- */
 
-  x.save();
+  const paperY = border + h;
 
-  for(let i=0;i<6500;i++){
-
-    const px=outer+Math.random()*w;
-    const py=outer+Math.random()*h;
-
-    const a=.018+Math.random()*.055;
-
-    x.fillStyle=
-      Math.random()>.5
-        ?`rgba(255,238,195,${a})`
-        :`rgba(15,5,1,${a})`;
-
-    x.fillRect(
-      px,
-      py,
-      Math.random()<.9?1:2,
-      Math.random()<.9?1:2
-    );
-
-  }
-
-  x.restore();
-
-
-  /* =======================================================
-     LICHTE OUDE VLEKKEN
-  ======================================================= */
-
-  x.save();
-
-  for(let i=0;i<28;i++){
-
-    const px=outer+Math.random()*w;
-    const py=outer+Math.random()*h;
-    const r=8+Math.random()*50;
-
-    const stain=x.createRadialGradient(
-      px,py,0,
-      px,py,r
-    );
-
-    stain.addColorStop(
-      0,
-      "rgba(75,38,12,.11)"
-    );
-
-    stain.addColorStop(
-      1,
-      "rgba(75,38,12,0)"
-    );
-
-    x.fillStyle=stain;
-
-    x.beginPath();
-
-    x.arc(
-      px,
-      py,
-      r,
-      0,
-      Math.PI*2
-    );
-
-    x.fill();
-
-  }
-
-  x.restore();
-
-
-  /* =======================================================
-     SCHEUREN
-  ======================================================= */
-
-  x.save();
-
-  x.globalAlpha=.25;
-
-  for(let i=0;i<28;i++){
-
-    const px=outer+Math.random()*w;
-    const py=outer+Math.random()*h;
-
-    x.strokeStyle=
-      Math.random()>.5
-        ?"rgba(255,235,195,.9)"
-        :"rgba(35,12,3,.9)";
-
-    x.lineWidth=Math.random()<.9?1:2;
-
-    x.beginPath();
-
-    x.moveTo(px,py);
-
-    x.lineTo(
-      px+15+Math.random()*170,
-      py-15+Math.random()*30
-    );
-
-    x.stroke();
-
-  }
-
-  x.restore();
-
-
-  /* =======================================================
-     PAPIEREN ONDERDEEL
-  ======================================================= */
-
-  const paperY=outer+h;
-
-
-  const paper=x.createLinearGradient(
+  const bottomPaper = ctx.createLinearGradient(
     0,
     paperY,
     0,
-    paperY+bottom
+    outH
   );
 
-  paper.addColorStop(
-    0,
-    "#d0ad75"
-  );
+  bottomPaper.addColorStop(0,"#d0b98c");
+  bottomPaper.addColorStop(.5,"#bda478");
+  bottomPaper.addColorStop(1,"#967b56");
 
-  paper.addColorStop(
-    .5,
-    "#c39b62"
-  );
+  ctx.fillStyle = bottomPaper;
 
-  paper.addColorStop(
-    1,
-    "#9b7040"
-  );
+  ctx.beginPath();
 
-  x.fillStyle=paper;
+  ctx.moveTo(0,paperY);
+  ctx.lineTo(outW,paperY);
 
-  x.fillRect(
-    outer,
-    paperY,
-    w,
-    bottom
-  );
+  /*
+    licht onregelmatige onderkant
+  */
 
-
-  /* =======================================================
-     PAPIERSTRUCTUUR
-  ======================================================= */
-
-  x.save();
-
-  for(let i=0;i<5000;i++){
-
-    const px=outer+Math.random()*w;
-    const py=paperY+Math.random()*bottom;
-
-    const a=.025+Math.random()*.09;
-
-    x.fillStyle=
-      Math.random()>.5
-        ?`rgba(255,235,185,${a})`
-        :`rgba(60,25,5,${a})`;
-
-    x.fillRect(
-      px,
-      py,
-      1+Math.random()*2,
-      1+Math.random()*2
+  for(let x=outW;x>=0;x-=25){
+    ctx.lineTo(
+      x,
+      outH - Math.random()*8
     );
-
   }
 
-  x.restore();
+  ctx.closePath();
+  ctx.fill();
 
 
-  /* =======================================================
+  /* ---------------------------------------------------------
      PAPIER VLEKKEN
-  ======================================================= */
+  --------------------------------------------------------- */
 
-  x.save();
+  ctx.globalAlpha=.13;
 
-  for(let i=0;i<30;i++){
+  for(let i=0;i<18;i++){
 
-    const px=outer+Math.random()*w;
-    const py=paperY+Math.random()*bottom;
-    const r=5+Math.random()*35;
+    const x=Math.random()*outW;
+    const y=paperY+Math.random()*paperHeight;
 
-    const stain=x.createRadialGradient(
-      px,py,0,
-      px,py,r
-    );
+    const r=5+Math.random()*25;
 
-    stain.addColorStop(
-      0,
-      "rgba(65,27,5,.20)"
-    );
+    ctx.fillStyle="#4a3020";
 
-    stain.addColorStop(
-      1,
-      "rgba(65,27,5,0)"
-    );
-
-    x.fillStyle=stain;
-
-    x.beginPath();
-
-    x.arc(
-      px,
-      py,
-      r,
-      0,
-      Math.PI*2
-    );
-
-    x.fill();
-
+    ctx.beginPath();
+    ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fill();
   }
 
-  x.restore();
+  ctx.globalAlpha=1;
 
 
-  /* =======================================================
-     GROTE TITEL
-  ======================================================= */
+  /* ---------------------------------------------------------
+     TITEL
+  --------------------------------------------------------- */
 
-  x.save();
+  ctx.textAlign="center";
 
-  x.textAlign="center";
-  x.textBaseline="middle";
+  const titleSize =
+    Math.max(22,Math.min(55,w*.065));
+
+  ctx.font =
+    "bold " + titleSize +
+    "px Georgia";
+
+  ctx.fillStyle="#291b13";
+
+  ctx.shadowColor="rgba(255,230,180,.25)";
+  ctx.shadowBlur=1;
+
+  ctx.fillText(
+    titleInput.value || "HALTE PLANTSOEN",
+    outW/2,
+    paperY + paperHeight*.43
+  );
+
+  ctx.shadowBlur=0;
 
 
-  const titleSize=Math.max(
-    28,
-    Math.min(w*.085,88)
+  /* ---------------------------------------------------------
+     ONDERTITEL
+  --------------------------------------------------------- */
+
+  const dateSize =
+    Math.max(12,Math.min(22,w*.025));
+
+  ctx.font =
+    dateSize + "px Georgia";
+
+  ctx.fillStyle="#39251a";
+
+  ctx.fillText(
+    dateInput.value || "HALLOWEEN · 23 OKTOBER 2026",
+    outW/2,
+    paperY + paperHeight*.68
   );
 
 
-  x.font=
-    "bold "+
-    titleSize+
-    "px Georgia,'Times New Roman',serif";
+  /* ---------------------------------------------------------
+     VICTORIAANSE HOEKORNAMENTEN
+  --------------------------------------------------------- */
 
-
-  /*
-     oude donkere drukinkt
-  */
-
-  x.fillStyle="#3b1e0c";
-
-  x.fillText(
-    "HALTE PLANTSOEN",
-    c.width/2,
-    paperY+bottom*.43
-  );
-
-
-  /*
-     lichte slijtage in de letters
-  */
-
-  x.globalAlpha=.18;
-
-  x.fillStyle="#d8b67a";
-
-  x.fillText(
-    "HALTE PLANTSOEN",
-    c.width/2-1,
-    paperY+bottom*.43-1
-  );
-
-
-  x.globalAlpha=1;
-
-
-  /* datum */
-
-  const sub=Math.max(
-    13,
-    Math.min(w*.028,30)
-  );
-
-  x.font=
-    "bold "+
-    sub+
-    "px Georgia,'Times New Roman',serif";
-
-  x.fillStyle="#3b1e0c";
-
-  x.fillText(
-    "HALLOWEEN · 23 OKTOBER 2026",
-    c.width/2,
-    paperY+bottom*.72
-  );
-
-
-  x.restore();
-
-
-  /* =======================================================
-     ONDERSTE ORNAMENTEN
-  ======================================================= */
-
-  drawDecoration(
-    x,
-    outer+35,
-    paperY+bottom*.70,
+  drawOrnament(
+    border*.8,
+    paperY + paperHeight*.72,
     1
   );
 
-  drawDecoration(
-    x,
-    outer+w-35,
-    paperY+bottom*.70,
+  drawOrnament(
+    outW-border*.8,
+    paperY + paperHeight*.72,
     -1
   );
 
 
-  /* =======================================================
-     BUITENSTE OUDE RAND
-  ======================================================= */
+  /* ---------------------------------------------------------
+     OUDE KRABBELS / LIJNTJES
+  --------------------------------------------------------- */
 
-  x.strokeStyle="#281307";
-  x.lineWidth=8;
+  ctx.strokeStyle="rgba(47,29,19,.55)";
+  ctx.lineWidth=1;
 
-  x.strokeRect(
-    outer/2,
-    outer/2,
-    c.width-outer,
-    c.height-outer
+  ctx.beginPath();
+
+  ctx.moveTo(border*.55,paperY+10);
+  ctx.bezierCurveTo(
+    border*1.5,
+    paperY+paperHeight*.2,
+    border*.2,
+    paperY+paperHeight*.4,
+    border*1.3,
+    paperY+paperHeight*.55
   );
 
+  ctx.stroke();
 
-  x.strokeStyle="#d0a96f";
-  x.lineWidth=2;
+  ctx.beginPath();
 
-  x.strokeRect(
-    8,
-    8,
-    c.width-16,
-    c.height-16
+  ctx.moveTo(outW-border*.55,paperY+10);
+  ctx.bezierCurveTo(
+    outW-border*1.5,
+    paperY+paperHeight*.2,
+    outW-border*.2,
+    paperY+paperHeight*.4,
+    outW-border*1.3,
+    paperY+paperHeight*.55
   );
 
+  ctx.stroke();
 
-  x.strokeStyle="rgba(50,23,8,.75)";
-  x.lineWidth=2;
 
-  x.strokeRect(
-    15,
-    15,
-    c.width-30,
-    c.height-30
+  /* ---------------------------------------------------------
+     BESCHADIGDE RAND
+  --------------------------------------------------------- */
+
+  ctx.strokeStyle="rgba(20,10,6,.7)";
+  ctx.lineWidth=2;
+
+  ctx.strokeRect(
+    3,
+    3,
+    outW-6,
+    outH-6
   );
 
-
-  /* =======================================================
-     AFGESLETEN / GEBROKEN RAND
-  ======================================================= */
-
-  x.save();
-
-  for(let i=0;i<85;i++){
-
-    const side=Math.floor(Math.random()*4);
-
-    let px,py;
-
-    if(side===0){
-      px=Math.random()*c.width;
-      py=3+Math.random()*16;
-    }
-
-    if(side===1){
-      px=Math.random()*c.width;
-      py=c.height-18+Math.random()*16;
-    }
-
-    if(side===2){
-      px=3+Math.random()*16;
-      py=Math.random()*c.height;
-    }
-
-    if(side===3){
-      px=c.width-18+Math.random()*16;
-      py=Math.random()*c.height;
-    }
-
-    x.fillStyle=
-      Math.random()>.45
-        ?"rgba(35,14,4,.75)"
-        :"rgba(235,203,151,.45)";
-
-    x.beginPath();
-
-    x.arc(
-      px,
-      py,
-      2+Math.random()*7,
-      0,
-      Math.PI*2
-    );
-
-    x.fill();
-
-  }
-
-  x.restore();
-
-
-  return c;
 }
 
 
 /* =========================================================
-   SIERLIJKE HALLOWEEN DECORATIE
+   ORNAMENT
 ========================================================= */
 
-function drawDecoration(c,x,y,flip){
+function drawOrnament(x,y,side){
 
-  c.save();
+  ctx.save();
 
-  c.translate(x,y);
-  c.scale(flip,1);
+  ctx.translate(x,y);
+  ctx.scale(side,1);
 
-  c.strokeStyle="#3b1d0b";
-  c.fillStyle="#3b1d0b";
-  c.lineWidth=2;
+  ctx.strokeStyle="rgba(45,27,18,.75)";
+  ctx.lineWidth=2;
 
+  ctx.beginPath();
 
-  /* grote Victoriaanse krul */
+  ctx.moveTo(0,0);
 
-  c.beginPath();
-
-  c.moveTo(0,0);
-
-  c.bezierCurveTo(
-    25,-28,
-    65,-25,
-    82,0
+  ctx.bezierCurveTo(
+    18,-18,
+    28,12,
+    42,-5
   );
 
-  c.bezierCurveTo(
-    95,20,
-    70,28,
-    60,10
+  ctx.bezierCurveTo(
+    54,-20,
+    57,14,
+    72,0
   );
 
-  c.bezierCurveTo(
-    53,-4,
-    70,-8,
-    76,5
-  );
+  ctx.stroke();
 
-  c.stroke();
+  ctx.beginPath();
 
+  ctx.arc(18,-8,5,0,Math.PI*2);
+  ctx.stroke();
 
-  /* tweede krul */
+  ctx.beginPath();
 
-  c.beginPath();
+  ctx.arc(57,-8,4,0,Math.PI*2);
+  ctx.stroke();
 
-  c.moveTo(5,8);
-
-  c.bezierCurveTo(
-    30,28,
-    60,38,
-    90,20
-  );
-
-  c.stroke();
-
-
-  /* spinnenweb */
-
-  c.beginPath();
-
-  c.moveTo(8,0);
-  c.lineTo(38,28);
-
-  c.moveTo(8,0);
-  c.lineTo(50,0);
-
-  c.moveTo(8,0);
-  c.lineTo(30,-27);
-
-  c.stroke();
-
-
-  for(let i=1;i<4;i++){
-
-    c.beginPath();
-
-    c.arc(
-      8,
-      0,
-      i*10,
-      -1.1,
-      .65
-    );
-
-    c.stroke();
-
-  }
-
-
-  /* klein blad */
-
-  c.beginPath();
-
-  c.ellipse(
-    42,
-    23,
-    10,
-    4,
-    -.5,
-    0,
-    Math.PI*2
-  );
-
-  c.stroke();
-
-
-  c.restore();
+  ctx.restore();
 }
 
 
 /* =========================================================
-   WACHTRIJ
+   TITEL AANPASSEN
 ========================================================= */
 
-saveBtn.addEventListener("click",()=>{
+titleInput.addEventListener("input",function(){
 
-  if(!processed.length)return;
+  if(currentImage){
+    makeOldPhoto(currentImage);
+  }
 
-  for(const image of processed){
+});
 
-    const data=image.toDataURL(
-      "image/jpeg",
-      .92
-    );
+dateInput.addEventListener("input",function(){
+
+  if(currentImage){
+    makeOldPhoto(currentImage);
+  }
+
+});
+
+
+/* =========================================================
+   IN WACHTRIJ
+========================================================= */
+
+saveBtn.addEventListener("click",function(){
+
+  if(!currentImage) return;
+
+  const imageData =
+    canvas.toDataURL("image/jpeg",.94);
+
+  queue.push({
+    image:imageData,
+    name:currentFileName
+  });
+
+  renderQueue();
+
+  statusEl.textContent =
+    "Foto staat in de wachtrij.";
+
+});
+
+
+/* =========================================================
+   WACHTRIJ TONEN
+========================================================= */
+
+function renderQueue(){
+
+  queueGrid.innerHTML="";
+
+  queue.forEach(function(item,index){
 
     const card=document.createElement("div");
 
     card.className="card";
 
-    const imageEl=document.createElement("img");
+    const img=document.createElement("img");
 
-    imageEl.src=data;
+    img.src=item.image;
 
-    const info=document.createElement("div");
+    const remove=document.createElement("button");
 
-    info.className="cardInfo";
-    info.textContent="Klaar voor beoordeling";
+    remove.textContent="UIT WACHTRIJ HALEN";
 
-    card.appendChild(imageEl);
-    card.appendChild(info);
+    remove.onclick=function(){
 
-    queueGrid.prepend(card);
-  }
+      queue.splice(index,1);
 
-  processed=[];
+      renderQueue();
 
-  wrap.style.display="none";
+    };
 
+    card.appendChild(img);
+    card.appendChild(remove);
+
+    queueGrid.appendChild(card);
+
+  });
+
+}
+
+
+/* =========================================================
+   ANNULEREN
+========================================================= */
+
+clearBtn.addEventListener("click",function(){
+
+  currentImage=null;
+  currentFileName="";
   filesInput.value="";
 
-  statusEl.textContent=
-    "Foto('s) staan nu in de wachtrij.";
-});
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
 
-
-/* ANNULEREN */
-
-clearBtn.addEventListener("click",()=>{
-
-  processed=[];
-
-  wrap.style.display="none";
-
-  filesInput.value="";
+  previewWrap.style.display="none";
 
   statusEl.textContent=
     "Kies één of meer foto's.";
 
 });
+
 
 </script>
 
