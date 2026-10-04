@@ -86,83 +86,150 @@ function makeProcessed(img){
   const w=Math.round(img.naturalWidth*scale);
   const h=Math.round(img.naturalHeight*scale);
 
-  const border=Math.max(70,Math.round(w*.045));
-  const bottom=Math.max(180,Math.round(h*.13));
+  // Smalle, oude fotomrand
+  const border=Math.max(45,Math.round(w*.028));
+  const bottom=Math.max(190,Math.round(h*.15));
 
   canvas.width=w+border*2;
   canvas.height=h+border+bottom;
 
-  // KADER
-  ctx.fillStyle=PHOTO_STYLE.kaderKleur;
+  // ===== OUDE PAPIERRAND =====
+  ctx.fillStyle="#c9ad7a";
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  // FOTO + FILTER
+  // ===== FOTO =====
   ctx.save();
   ctx.translate(border,border);
 
+  // Kleuren blijven duidelijk zichtbaar
   ctx.filter=
-    "sepia("+PHOTO_STYLE.sepia+") "+
-    "saturate("+PHOTO_STYLE.saturate+") "+
-    "contrast("+PHOTO_STYLE.contrast+") "+
-    "brightness("+PHOTO_STYLE.brightness+")";
+    "sepia(.18) "+
+    "saturate(.88) "+
+    "contrast(1.08) "+
+    "brightness(1.02)";
 
   ctx.drawImage(img,0,0,w,h);
   ctx.restore();
 
-  // DONKERE OUDE-FOTO-RAND
+  // ===== DONKERE SPOOKACHTIGE HOEKEN =====
   const vignette=ctx.createRadialGradient(
     canvas.width/2,
     canvas.height/2,
-    Math.min(w,h)*.20,
+    Math.min(w,h)*.25,
     canvas.width/2,
     canvas.height/2,
-    Math.max(w,h)*.70
+    Math.max(w,h)*.72
   );
 
-  vignette.addColorStop(0,"rgba(255,245,215,0)");
-  vignette.addColorStop(.72,"rgba(60,38,18,.05)");
-  vignette.addColorStop(1,"rgba(40,25,12,.30)");
+  vignette.addColorStop(0,"rgba(0,0,0,0)");
+  vignette.addColorStop(.72,"rgba(20,10,5,.05)");
+  vignette.addColorStop(1,"rgba(10,5,3,.38)");
 
   ctx.fillStyle=vignette;
   ctx.fillRect(border,border,w,h);
 
-  // BINNENRAND
-  ctx.strokeStyle="rgba(65,48,30,.72)";
-  ctx.lineWidth=4;
+  // ===== VERWEERDE BINNENRAND =====
+  ctx.strokeStyle="rgba(45,28,16,.8)";
+  ctx.lineWidth=3;
   ctx.strokeRect(
-    border+2,
-    border+2,
-    w-4,
-    h-4
+    border+3,
+    border+3,
+    w-6,
+    h-6
   );
 
-  // TEKST
-  ctx.fillStyle=PHOTO_STYLE.tekstKleur;
+  // ===== KLEINE OUDE KRASJES =====
+  ctx.save();
+  ctx.globalAlpha=.18;
+  ctx.strokeStyle="#332015";
+  ctx.lineWidth=1;
+
+  for(let i=0;i<18;i++){
+    const x=border+Math.random()*w;
+    const y=border+Math.random()*h;
+    const lengte=10+Math.random()*45;
+
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.lineTo(x+lengte,y+Math.random()*3-1.5);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+
+  // ===== ONDERSTE TEKSTVLAK =====
+  ctx.fillStyle="#c9ad7a";
+  ctx.fillRect(
+    border,
+    border+h,
+    w,
+    bottom
+  );
+
+  // ===== DECORATIEVE LIJN BOVEN TEKST =====
+  ctx.strokeStyle="rgba(55,32,18,.65)";
+  ctx.lineWidth=2;
+
+  ctx.beginPath();
+  ctx.moveTo(border+20,border+h+18);
+  ctx.lineTo(border+w-20,border+h+18);
+  ctx.stroke();
+
+  // ===== HALTE PLANTSOEN =====
+  ctx.fillStyle="#352015";
   ctx.textAlign="center";
 
   ctx.font=
     "bold "+
-    Math.max(24,Math.round(w*.035))+
+    Math.max(32,Math.round(w*.052))+
     "px Georgia";
 
   ctx.fillText(
     PHOTO_STYLE.titel,
     canvas.width/2,
-    h+border+Math.max(55,Math.round(h*.045))
+    border+h+Math.max(75,Math.round(h*.055))
   );
 
+  // ===== ONDERTEXT =====
   ctx.font=
-    Math.max(20,Math.round(w*.024))+
+    Math.max(21,Math.round(w*.026))+
     "px Georgia";
 
   ctx.fillText(
     PHOTO_STYLE.ondertekst,
     canvas.width/2,
-    h+border+Math.max(105,Math.round(h*.085))
+    border+h+Math.max(125,Math.round(h*.092))
   );
+
+  // ===== KLEINE HALLOWEEN-KRULLEN =====
+  ctx.strokeStyle="rgba(55,32,18,.75)";
+  ctx.lineWidth=2;
+
+  const cy=border+h+bottom-28;
+
+  ctx.beginPath();
+  ctx.moveTo(border+28,cy);
+  ctx.bezierCurveTo(
+    border+45,cy-18,
+    border+65,cy+18,
+    border+82,cy
+  );
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(border+w-28,cy);
+  ctx.bezierCurveTo(
+    border+w-45,cy-18,
+    border+w-65,cy+18,
+    border+w-82,cy
+  );
+  ctx.stroke();
 
   return canvas.toDataURL("image/jpeg",.94);
 }
+
+    
+
 
 function readImage(file){
   return new Promise((resolve,reject)=>{
