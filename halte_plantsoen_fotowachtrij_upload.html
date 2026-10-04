@@ -79,107 +79,113 @@ const PHOTO_STYLE = {
 
 let processed=[]; 
 
-  function makeProcessed(img){
+function makeProcessed(img){
 
   const maxW=1800;
   const scale=Math.min(1,maxW/img.naturalWidth);
   const w=Math.round(img.naturalWidth*scale);
   const h=Math.round(img.naturalHeight*scale);
 
-  // Smalle fotomarge + iets ruimere tekststrook
-  const border=Math.max(38,Math.round(w*.025));
-  const bottom=Math.max(190,Math.round(h*.145));
+  const border=Math.max(32,Math.round(w*.022));
+  const bottom=Math.max(220,Math.round(h*.17));
 
   canvas.width=w+border*2;
   canvas.height=h+border+bottom;
 
-  // ===== PAPIER =====
-  ctx.fillStyle="#211812";
+  // =====================================================
+  // ACHTERGROND / OUD PAPIER
+  // =====================================================
+
+  ctx.fillStyle="#b99a62";
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  // ===== FOTO OP TIJDELIJK CANVAS =====
-  const photoCanvas=document.createElement("canvas");
-  photoCanvas.width=w;
-  photoCanvas.height=h;
+  // =====================================================
+  // FOTO
+  // KLEUR BLIJFT BEHOUDEN — ALLEEN OUDE FILMTOON
+  // =====================================================
 
-  const pctx=photoCanvas.getContext("2d");
-  pctx.drawImage(img,0,0,w,h);
+  const photo=document.createElement("canvas");
+  photo.width=w;
+  photo.height=h;
 
-  // ===== ECHTE OUDE-KLEURENFOTO =====
-  const imageData=pctx.getImageData(0,0,w,h);
-  const pixels=imageData.data;
+  const p=photo.getContext("2d");
 
-  for(let i=0;i<pixels.length;i+=4){
+  p.drawImage(img,0,0,w,h);
 
-    let r=pixels[i];
-    let g=pixels[i+1];
-    let b=pixels[i+2];
+  const data=p.getImageData(0,0,w,h);
+  const px=data.data;
 
-    // Lichte warme ouderdomstint,
-    // maar kleuren blijven duidelijk zichtbaar
-    r=r*1.06+5;
-    g=g*0.98+2;
-    b=b*0.88;
+  for(let i=0;i<px.length;i+=4){
 
-    // Iets minder moderne digitale verzadiging
+    let r=px[i];
+    let g=px[i+1];
+    let b=px[i+2];
+
+    // warme oude filmtoon
+    r=r*1.035+3;
+    g=g*.985+1;
+    b=b*.91;
+
+    // kleuren iets zachter, maar NIET weg
     const avg=(r+g+b)/3;
-    r=avg+(r-avg)*0.88;
-    g=avg+(g-avg)*0.88;
-    b=avg+(b-avg)*0.88;
 
-    // Iets meer ouderwets contrast
-    r=(r-128)*1.06+128;
-    g=(g-128)*1.06+128;
-    b=(b-128)*1.06+128;
+    r=avg+(r-avg)*.93;
+    g=avg+(g-avg)*.93;
+    b=avg+(b-avg)*.93;
 
-    // Filmkorrel
-    const grain=(Math.random()-0.5)*13;
+    // ouderwets contrast
+    r=(r-128)*1.08+128;
+    g=(g-128)*1.08+128;
+    b=(b-128)*1.08+128;
 
-    r+=grain;
-    g+=grain;
-    b+=grain;
+    // subtiele filmkorrel
+    const grain=(Math.random()-.5)*10;
 
-    pixels[i]=Math.max(0,Math.min(255,r));
-    pixels[i+1]=Math.max(0,Math.min(255,g));
-    pixels[i+2]=Math.max(0,Math.min(255,b));
+    px[i]=Math.max(0,Math.min(255,r+grain));
+    px[i+1]=Math.max(0,Math.min(255,g+grain));
+    px[i+2]=Math.max(0,Math.min(255,b+grain));
   }
 
-  pctx.putImageData(imageData,0,0);
+  p.putImageData(data,0,0);
 
-  // ===== FOTO PLAATSEN =====
-  ctx.drawImage(
-    photoCanvas,
-    border,
-    border
-  );
+  ctx.drawImage(photo,border,border);
 
-  // ===== OUDE DONKERE HOEKEN =====
+  // =====================================================
+  // DONKERE VERWEERDE HOEKEN
+  // =====================================================
+
   const vignette=ctx.createRadialGradient(
     canvas.width/2,
-    canvas.height/2,
-    Math.min(w,h)*.22,
+    border+h/2,
+    Math.min(w,h)*.25,
     canvas.width/2,
-    canvas.height/2,
+    border+h/2,
     Math.max(w,h)*.72
   );
 
   vignette.addColorStop(0,"rgba(0,0,0,0)");
-  vignette.addColorStop(.62,"rgba(25,12,5,.02)");
-  vignette.addColorStop(.84,"rgba(25,12,5,.16)");
-  vignette.addColorStop(1,"rgba(5,3,2,.58)");
+  vignette.addColorStop(.68,"rgba(20,10,4,.03)");
+  vignette.addColorStop(.86,"rgba(30,15,5,.16)");
+  vignette.addColorStop(1,"rgba(5,2,1,.62)");
 
   ctx.fillStyle=vignette;
   ctx.fillRect(border,border,w,h);
 
-  // ===== VERWEERDE VLEKKEN =====
-  ctx.save();
-  ctx.globalAlpha=.10;
-  ctx.fillStyle="#d8bd82";
+  // =====================================================
+  // OUDE VLEKKEN / VERKLEURING
+  // =====================================================
 
-  for(let i=0;i<20;i++){
+  ctx.save();
+  ctx.globalAlpha=.13;
+
+  for(let i=0;i<25;i++){
+
     const x=border+Math.random()*w;
     const y=border+Math.random()*h;
-    const r=3+Math.random()*18;
+    const r=2+Math.random()*18;
+
+    ctx.fillStyle=
+      i%2===0 ? "#4b2c18" : "#e4c991";
 
     ctx.beginPath();
     ctx.arc(x,y,r,0,Math.PI*2);
@@ -188,30 +194,39 @@ let processed=[];
 
   ctx.restore();
 
-  // ===== OUDE KRASSEN =====
+  // =====================================================
+  // KRASSEN / FILMSCHADE
+  // =====================================================
+
   ctx.save();
-  ctx.globalAlpha=.20;
-  ctx.strokeStyle="#ead6a8";
+  ctx.globalAlpha=.22;
   ctx.lineWidth=1;
 
-  for(let i=0;i<25;i++){
+  for(let i=0;i<32;i++){
+
     const x=border+Math.random()*w;
     const y=border+Math.random()*h;
-    const lengte=8+Math.random()*70;
+    const lengte=10+Math.random()*80;
+
+    ctx.strokeStyle=
+      i%3===0 ? "#f0dfb4" : "#392116";
 
     ctx.beginPath();
     ctx.moveTo(x,y);
     ctx.lineTo(
       x+lengte,
-      y+(Math.random()*5-2.5)
+      y+(Math.random()*6-3)
     );
     ctx.stroke();
   }
 
   ctx.restore();
 
-  // ===== DUBBELE OUDE FOTORAND =====
-  ctx.strokeStyle="rgba(25,14,8,.95)";
+  // =====================================================
+  // VERWEERDE FOTORAND
+  // =====================================================
+
+  ctx.strokeStyle="#2c180e";
   ctx.lineWidth=5;
 
   ctx.strokeRect(
@@ -221,7 +236,7 @@ let processed=[];
     h
   );
 
-  ctx.strokeStyle="rgba(220,190,130,.65)";
+  ctx.strokeStyle="rgba(232,204,151,.65)";
   ctx.lineWidth=2;
 
   ctx.strokeRect(
@@ -231,8 +246,11 @@ let processed=[];
     h-16
   );
 
-  // ===== ONDERSTE PAPIERSTROOK =====
-  ctx.fillStyle="#b59a68";
+  // =====================================================
+  // ONDERSTE OUDE PAPIERSTROOK
+  // =====================================================
+
+  ctx.fillStyle="#b99a62";
 
   ctx.fillRect(
     border,
@@ -241,15 +259,18 @@ let processed=[];
     bottom
   );
 
-  // Lichte ouderdomsvlekken op papier
+  // papiertextuur
   ctx.save();
-  ctx.globalAlpha=.10;
-  ctx.fillStyle="#352015";
+  ctx.globalAlpha=.12;
 
-  for(let i=0;i<12;i++){
+  for(let i=0;i<35;i++){
+
     const x=border+Math.random()*w;
     const y=border+h+Math.random()*bottom;
-    const r=2+Math.random()*9;
+    const r=2+Math.random()*13;
+
+    ctx.fillStyle=
+      i%2 ? "#3b2113" : "#e5cc98";
 
     ctx.beginPath();
     ctx.arc(x,y,r,0,Math.PI*2);
@@ -258,92 +279,126 @@ let processed=[];
 
   ctx.restore();
 
-  // ===== DECORATIEVE HALLOWEEN-LIJN =====
-  ctx.strokeStyle="#392218";
+  // =====================================================
+  // HALLOWEEN / VICTORIAANSE ORNAMENTEN
+  // =====================================================
+
+  ctx.strokeStyle="#32190e";
   ctx.lineWidth=2;
 
-  const decoY=border+h+25;
+  const decoY=border+h+31;
 
+  // links
   ctx.beginPath();
-
   ctx.moveTo(border+25,decoY);
 
   ctx.bezierCurveTo(
-    border+45,decoY-14,
-    border+60,decoY+14,
-    border+80,decoY
+    border+45,decoY-18,
+    border+62,decoY+18,
+    border+82,decoY
   );
 
   ctx.bezierCurveTo(
-    border+100,decoY-14,
-    border+120,decoY+14,
-    border+140,decoY
+    border+102,decoY-18,
+    border+122,decoY+18,
+    border+148,decoY
   );
 
   ctx.stroke();
 
+  // rechts
   ctx.beginPath();
-
   ctx.moveTo(border+w-25,decoY);
 
   ctx.bezierCurveTo(
-    border+w-45,decoY-14,
-    border+w-60,decoY+14,
-    border+w-80,decoY
+    border+w-45,decoY-18,
+    border+w-62,decoY+18,
+    border+w-82,decoY
   );
 
   ctx.bezierCurveTo(
-    border+w-100,decoY-14,
-    border+w-120,decoY+14,
-    border+w-140,decoY
+    border+w-102,decoY-18,
+    border+w-122,decoY+18,
+    border+w-148,decoY
   );
 
   ctx.stroke();
 
-  // ===== GROTE TITEL =====
-  ctx.fillStyle="#29170f";
+  // kleine spinwebachtige lijntjes
+  ctx.globalAlpha=.65;
+
+  ctx.beginPath();
+  ctx.moveTo(border+18,decoY+55);
+  ctx.lineTo(border+65,decoY+20);
+  ctx.lineTo(border+90,decoY+60);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(border+w-18,decoY+55);
+  ctx.lineTo(border+w-65,decoY+20);
+  ctx.lineTo(border+w-90,decoY+60);
+  ctx.stroke();
+
+  ctx.globalAlpha=1;
+
+  // =====================================================
+  // GROTE TITEL
+  // =====================================================
+
+  ctx.fillStyle="#29160d";
   ctx.textAlign="center";
 
   ctx.font=
     "bold "+
-    Math.max(36,Math.round(w*.058))+
+    Math.max(38,Math.round(w*.06))+
     "px Georgia";
 
   ctx.fillText(
     PHOTO_STYLE.titel,
     canvas.width/2,
-    border+h+Math.max(88,Math.round(h*.065))
+    border+h+Math.max(92,Math.round(h*.068))
   );
 
-  // ===== ONDERTEXT =====
+  // =====================================================
+  // ONDERTITEL
+  // =====================================================
+
   ctx.font=
-    Math.max(22,Math.round(w*.027))+
+    Math.max(22,Math.round(w*.028))+
     "px Georgia";
 
   ctx.fillText(
     PHOTO_STYLE.ondertekst,
     canvas.width/2,
-    border+h+Math.max(140,Math.round(h*.105))
+    border+h+Math.max(145,Math.round(h*.108))
   );
 
-  // ===== KLEINE ORNAMENTEN ONDERAAN =====
-  ctx.strokeStyle="#392218";
+  // =====================================================
+  // KLEINE DECORATIEVE LIJN ONDERAAN
+  // =====================================================
+
+  ctx.strokeStyle="#32190e";
   ctx.lineWidth=2;
 
-  const ornamentY=canvas.height-22;
+  const lineY=canvas.height-27;
 
   ctx.beginPath();
-  ctx.arc(border+28,ornamentY,8,0,Math.PI*2);
+  ctx.moveTo(canvas.width/2-90,lineY);
+  ctx.lineTo(canvas.width/2-15,lineY);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.arc(canvas.width-border-28,ornamentY,8,0,Math.PI*2);
+  ctx.moveTo(canvas.width/2+15,lineY);
+  ctx.lineTo(canvas.width/2+90,lineY);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(canvas.width/2,lineY,6,0,Math.PI*2);
   ctx.stroke();
 
   return canvas.toDataURL("image/jpeg",.94);
 }
-
-
+  
 function readImage(file){
   return new Promise((resolve,reject)=>{
     const reader=new FileReader();
