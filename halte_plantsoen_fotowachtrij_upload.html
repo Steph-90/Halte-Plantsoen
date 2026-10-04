@@ -3,141 +3,153 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Halte Plantsoen</title>
+<title>Halte Plantsoen - Fotowachtrij</title>
 
 <style>
 *{box-sizing:border-box}
 
 html,body{
- margin:0;
- background:#0d0a08;
- color:#ead8b5;
- font-family:Georgia,"Times New Roman",serif
+margin:0;
+padding:0;
+background:#0b0806;
+color:#ead9b8;
+font-family:Georgia,"Times New Roman",serif;
 }
 
 body{
- background:
- radial-gradient(circle at 50% 0,#392719,#110c09 55%,#060504)
+background:
+radial-gradient(circle at 50% 0,#3a2718,#120c08 48%,#050403);
 }
 
 main{
- width:min(1050px,94%);
- margin:auto;
- padding:22px 0 50px
+width:min(1000px,94%);
+margin:auto;
+padding:25px 0 50px;
 }
 
-header{text-align:center;margin-bottom:24px}
+header{
+text-align:center;
+margin-bottom:25px;
+}
 
-.orn{
- color:#9b7848;
- font-size:25px;
- letter-spacing:10px
+.ornament{
+font-size:27px;
+color:#a27b46;
+letter-spacing:10px;
 }
 
 h1{
- margin:6px 0 8px;
- font-size:clamp(35px,9vw,72px);
- letter-spacing:4px;
- color:#d9bd85;
- text-shadow:3px 4px 0 #24160d,0 8px 20px #000
+margin:6px 0 8px;
+font-size:clamp(34px,9vw,70px);
+letter-spacing:3px;
+color:#d8bd86;
+text-shadow:3px 4px #211109,0 8px 20px #000;
 }
 
 header p{
- margin:0;
- color:#b99d6d;
- letter-spacing:3px;
- font-size:15px
+margin:0;
+font-size:15px;
+letter-spacing:3px;
+color:#bda174;
 }
 
 #files{
- position:absolute;
- width:1px;
- height:1px;
- opacity:0
+position:absolute;
+width:1px;
+height:1px;
+opacity:0;
 }
 
 .pick{
- display:block;
- padding:18px;
- text-align:center;
- cursor:pointer;
- border:2px solid #795c37;
- background:linear-gradient(#49321e,#21140d);
- color:#e6cfa4;
- font-weight:bold;
- font-size:18px;
- box-shadow:inset 0 0 0 3px #120b07,0 7px 20px #000
+display:block;
+padding:18px;
+text-align:center;
+cursor:pointer;
+font-size:18px;
+font-weight:bold;
+color:#ead3a5;
+background:linear-gradient(#4a321d,#21130b);
+border:2px solid #80603a;
+box-shadow:inset 0 0 0 3px #130b07,0 8px 20px #000;
 }
 
 #status{
- text-align:center;
- color:#aa9777;
- margin:13px 0 20px
+text-align:center;
+margin:14px 0 20px;
+color:#aa9674;
 }
 
-#previewWrap{display:none}
+#previewWrap{
+display:none;
+}
 
 .preview{
- padding:15px;
- background:#090705;
- border:1px solid #705331;
- box-shadow:0 12px 35px #000
+padding:14px;
+background:#080604;
+border:2px solid #65482b;
+box-shadow:0 12px 35px #000;
 }
 
 canvas{
- display:block;
- width:100%;
- height:auto
+display:block;
+width:100%;
+height:auto;
 }
 
 .actions{
- display:flex;
- gap:10px;
- margin-top:14px
+display:flex;
+gap:12px;
+margin-top:14px;
 }
 
 button{
- flex:1;
- padding:16px;
- border:2px solid #795c37;
- background:linear-gradient(#49321e,#21140d);
- color:#ead4aa;
- font:bold 17px Georgia,serif
+flex:1;
+padding:16px;
+font:bold 17px Georgia,serif;
+color:#ead3a5;
+background:linear-gradient(#49311d,#21130b);
+border:2px solid #80603a;
+cursor:pointer;
 }
 
-#queue{margin-top:40px}
+#queue{
+margin-top:40px;
+}
 
 #queue h2{
- text-align:center;
- color:#d0b37d;
- font-size:31px;
- letter-spacing:3px
+text-align:center;
+font-size:31px;
+letter-spacing:3px;
+color:#d0b27a;
 }
 
 .queueGrid{
- display:grid;
- grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
- gap:15px
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+gap:15px;
 }
 
 .card{
- background:#17100b;
- padding:8px;
- border:1px solid #61482d;
- box-shadow:0 7px 18px #000
+background:#17100b;
+padding:8px;
+border:1px solid #65482b;
+box-shadow:0 7px 18px #000;
 }
 
-.card img{width:100%;display:block}
+.card img{
+display:block;
+width:100%;
+}
 
 .cardInfo{
- text-align:center;
- padding:8px;
- color:#9d8867;
- font-size:12px
+text-align:center;
+padding:8px;
+font-size:12px;
+color:#9f8968;
 }
 
 @media(max-width:600px){
- .actions{flex-direction:column}
+.actions{flex-direction:column}
 }
 </style>
 </head>
@@ -147,37 +159,37 @@ button{
 <main>
 
 <header>
- <div class="orn">✦ ❦ ✦</div>
- <h1>HALTE PLANTSOEN</h1>
- <p>HALLOWEEN · 23 OKTOBER 2026</p>
+<div class="ornament">✦ ❦ ✦</div>
+<h1>HALTE PLANTSOEN</h1>
+<p>HALLOWEEN · 23 OKTOBER 2026</p>
 </header>
 
 <input id="files" type="file" accept="image/*" multiple>
 
 <label class="pick" for="files">
- KIES FOTO'S VAN JE SAMSUNG
+KIES FOTO'S VAN JE SAMSUNG
 </label>
 
 <div id="status">
- Kies één of meer foto's.
+Kies één of meer foto's.
 </div>
 
 <div id="previewWrap">
 
- <div class="preview">
-  <canvas id="canvas"></canvas>
- </div>
+<div class="preview">
+<canvas id="canvas"></canvas>
+</div>
 
- <div class="actions">
-  <button id="save">IN WACHTRIJ ZETTEN</button>
-  <button id="clear">ANNULEREN</button>
- </div>
+<div class="actions">
+<button id="save">IN WACHTRIJ ZETTEN</button>
+<button id="clear">ANNULEREN</button>
+</div>
 
 </div>
 
 <section id="queue">
- <h2>✦ WACHTRIJ ✦</h2>
- <div id="queueGrid" class="queueGrid"></div>
+<h2>✦ WACHTRIJ ✦</h2>
+<div id="queueGrid" class="queueGrid"></div>
 </section>
 
 </main>
@@ -195,545 +207,677 @@ const clearBtn=document.getElementById("clear");
 
 let processed=[];
 
+
+/* FOTO KIEZEN */
+
 filesInput.addEventListener("change",async()=>{
 
- const files=[...filesInput.files];
+const files=[...filesInput.files];
 
- if(!files.length)return;
+if(!files.length)return;
 
- statusEl.textContent="Foto wordt verwerkt...";
+statusEl.textContent="Foto wordt verwerkt...";
 
- processed=[];
+processed=[];
 
- for(const file of files){
+for(const file of files){
 
-  const img=await loadImage(file);
+const img=await loadImage(file);
 
-  processed.push(makePhoto(img));
+processed.push(makePhoto(img));
 
- }
+}
 
- show(processed[0]);
+show(processed[0]);
 
- wrap.style.display="block";
+wrap.style.display="block";
 
- statusEl.textContent=
-  processed.length===1
-   ?"Foto klaar om te bekijken."
-   :processed.length+" foto's klaar.";
-
- wrap.scrollIntoView({
-  behavior:"smooth",
-  block:"start"
- });
+statusEl.textContent=
+processed.length===1
+?"Foto klaar om te bekijken."
+:processed.length+" foto's klaar.";
 
 });
 
 
+/* FOTO LADEN */
+
 function loadImage(file){
 
- return new Promise((resolve,reject)=>{
+return new Promise((resolve,reject)=>{
 
-  const url=URL.createObjectURL(file);
-  const img=new Image();
+const url=URL.createObjectURL(file);
+const img=new Image();
 
-  img.onload=()=>{
-   URL.revokeObjectURL(url);
-   resolve(img);
-  };
+img.onload=()=>{
+URL.revokeObjectURL(url);
+resolve(img);
+};
 
-  img.onerror=reject;
-  img.src=url;
+img.onerror=reject;
+img.src=url;
 
- });
+});
 
 }
 
 
+/* FOTO TONEN */
+
 function show(img){
 
- canvas.width=img.width;
- canvas.height=img.height;
+canvas.width=img.width;
+canvas.height=img.height;
 
- ctx.clearRect(
-  0,0,
-  canvas.width,
-  canvas.height
- );
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
 
- ctx.drawImage(img,0,0);
+ctx.drawImage(img,0,0);
 
 }
 
 
 /* =====================================================
-   NIEUWE 1913 FOTO-STIJL
+   FOTO EFFECT
 ===================================================== */
 
 function makePhoto(img){
 
- const max=1500;
+let w=img.naturalWidth;
+let h=img.naturalHeight;
 
- let w=img.naturalWidth;
- let h=img.naturalHeight;
+const max=1500;
 
- if(w>max){
+if(w>max){
 
-  const s=max/w;
+const schaal=max/w;
 
-  w=Math.round(w*s);
-  h=Math.round(h*s);
+w=Math.round(w*schaal);
+h=Math.round(h*schaal);
 
- }
+}
 
- const c=document.createElement("canvas");
- c.width=w;
- c.height=h;
+const c=document.createElement("canvas");
 
- const x=c.getContext("2d");
+c.width=w;
+c.height=h;
 
- x.drawImage(img,0,0,w,h);
+const x=c.getContext("2d");
 
 
- /* -----------------------------------------------
-    FOTO KLEUR
- ------------------------------------------------ */
+/* ORIGINELE FOTO */
 
- const pixels=x.getImageData(0,0,w,h);
- const d=pixels.data;
+x.drawImage(
+img,
+0,
+0,
+w,
+h
+);
 
- for(let i=0;i<d.length;i+=4){
 
-  let r=d[i];
-  let g=d[i+1];
-  let b=d[i+2];
+/* =====================================================
+   STERKERE 1913 KLEUR
+===================================================== */
 
-  /*
-    Oude emulsie:
-    warm maar NIET alles beige.
-  */
+const pixels=x.getImageData(
+0,
+0,
+w,
+h
+);
 
-  r=r*1.045+4;
-  g=g*.99;
-  b=b*.92;
+const d=pixels.data;
 
-  /*
-    iets sterker contrast
-  */
+for(let i=0;i<d.length;i+=4){
 
-  r=(r-128)*1.12+128;
-  g=(g-128)*1.10+128;
-  b=(b-128)*1.08+128;
+let r=d[i];
+let g=d[i+1];
+let b=d[i+2];
 
-  d[i]=Math.max(0,Math.min(255,r));
-  d[i+1]=Math.max(0,Math.min(255,g));
-  d[i+2]=Math.max(0,Math.min(255,b));
 
- }
+/* warme oude emulsie */
 
- x.putImageData(pixels,0,0);
+r=r*1.08+5;
+g=g*.94+3;
+b=b*.78;
 
 
- /* -----------------------------------------------
-    PAPIER / FILM TEXTUUR
- ------------------------------------------------ */
+/* minder moderne verzadiging */
 
- x.save();
+const grijs=(r+g+b)/3;
 
- for(let i=0;i<4500;i++){
+r=r*.82+grijs*.18;
+g=g*.82+grijs*.18;
+b=b*.82+grijs*.18;
 
-  const px=Math.random()*w;
-  const py=Math.random()*h;
 
-  const a=.025+Math.random()*.075;
+/* contrast */
 
-  x.fillStyle=
-   Math.random()>.5
-    ?`rgba(255,225,170,${a})`
-    :`rgba(20,8,2,${a})`;
+r=(r-128)*1.12+128;
+g=(g-128)*1.12+128;
+b=(b-128)*1.12+128;
 
-  const s=Math.random()<.9?1:2;
+d[i]=Math.max(0,Math.min(255,r));
+d[i+1]=Math.max(0,Math.min(255,g));
+d[i+2]=Math.max(0,Math.min(255,b));
 
-  x.fillRect(px,py,s,s);
+}
 
- }
+x.putImageData(pixels,0,0);
 
- x.restore();
 
+/* =====================================================
+   PAPIERACHTIGE WAAS
+===================================================== */
 
- /* -----------------------------------------------
-    OUDE INKT / VLEKKEN
- ------------------------------------------------ */
+x.fillStyle="rgba(126,82,39,.12)";
+x.fillRect(0,0,w,h);
 
- x.save();
 
- for(let i=0;i<25;i++){
+/* =====================================================
+   GROVE FILMKORREL
+===================================================== */
 
-  const px=Math.random()*w;
-  const py=Math.random()*h;
-  const r=5+Math.random()*55;
+x.save();
 
-  const stain=x.createRadialGradient(
-   px,py,0,
-   px,py,r
-  );
+for(let i=0;i<7000;i++){
 
-  stain.addColorStop(
-   0,
-   "rgba(55,25,8,.18)"
-  );
+const px=Math.random()*w;
+const py=Math.random()*h;
 
-  stain.addColorStop(
-   .5,
-   "rgba(55,25,8,.05)"
-  );
+const licht=Math.random()>.52;
 
-  stain.addColorStop(
-   1,
-   "rgba(55,25,8,0)"
-  );
+x.fillStyle=licht
+?"rgba(255,235,190,.10)"
+:"rgba(20,5,1,.12)";
 
-  x.fillStyle=stain;
+const grootte=Math.random()<.92?1:2;
 
-  x.beginPath();
-  x.arc(px,py,r,0,Math.PI*2);
-  x.fill();
+x.fillRect(
+px,
+py,
+grootte,
+grootte
+);
 
- }
+}
 
- x.restore();
+x.restore();
 
 
- /* -----------------------------------------------
-    KRASSEN
- ------------------------------------------------ */
+/* =====================================================
+   OUDE VLEKKEN
+===================================================== */
 
- x.save();
+x.save();
 
- x.globalAlpha=.22;
+for(let i=0;i<35;i++){
 
- for(let i=0;i<25;i++){
+const px=Math.random()*w;
+const py=Math.random()*h;
+const r=10+Math.random()*70;
 
-  const px=Math.random()*w;
-  const py=Math.random()*h;
+const vlek=x.createRadialGradient(
+px,py,0,
+px,py,r
+);
 
-  x.strokeStyle=
-   Math.random()>.5
-    ?"#f3dfb5"
-    :"#1d0d06";
+vlek.addColorStop(
+0,
+"rgba(55,25,8,.22)"
+);
 
-  x.lineWidth=Math.random()<.8?1:2;
+vlek.addColorStop(
+.45,
+"rgba(55,25,8,.09)"
+);
 
-  x.beginPath();
+vlek.addColorStop(
+1,
+"rgba(55,25,8,0)"
+);
 
-  x.moveTo(px,py);
+x.fillStyle=vlek;
 
-  x.lineTo(
-   px+20+Math.random()*150,
-   py+(Math.random()*18-9)
-  );
+x.beginPath();
 
-  x.stroke();
+x.arc(
+px,
+py,
+r,
+0,
+Math.PI*2
+);
 
- }
+x.fill();
 
- x.restore();
+}
 
+x.restore();
 
- /* -----------------------------------------------
-    DONKERE ONGELIJKE FOTO-RAND
- ------------------------------------------------ */
 
- const vignette=x.createRadialGradient(
-  w/2,h/2,
-  Math.min(w,h)*.25,
-  w/2,h/2,
-  Math.max(w,h)*.73
- );
+/* =====================================================
+   OUDE KRASSEN EN SCHEURTJES
+===================================================== */
 
- vignette.addColorStop(0,"rgba(0,0,0,0)");
- vignette.addColorStop(.60,"rgba(0,0,0,.02)");
- vignette.addColorStop(.82,"rgba(30,10,3,.25)");
- vignette.addColorStop(1,"rgba(5,2,1,.82)");
+x.save();
 
- x.fillStyle=vignette;
- x.fillRect(0,0,w,h);
+x.globalAlpha=.35;
 
+for(let i=0;i<35;i++){
 
- /* =================================================
-    ECHT DONKER VICTORIAANS KADER
- ================================================= */
+const px=Math.random()*w;
+const py=Math.random()*h;
 
- const b=Math.min(w,h)*.075;
+x.strokeStyle=
+Math.random()>.5
+?"#f1ddb4"
+:"#32170a";
 
- x.save();
+x.lineWidth=
+Math.random()<.85?1:2;
 
- /*
-    brede donkere basis
- */
+x.beginPath();
 
- x.fillStyle="rgba(15,8,4,.72)";
+x.moveTo(px,py);
 
- x.fillRect(
-  0,0,w,b
- );
+x.lineTo(
+px+20+Math.random()*180,
+py-10+Math.random()*20
+);
 
- x.fillRect(
-  0,h-b,w,b
- );
+x.stroke();
 
- x.fillRect(
-  0,0,b,h
- );
+}
 
- x.fillRect(
-  w-b,0,b,h
- );
+x.restore();
 
 
- /*
-    dubbele ouderwetse lijnen
- */
+/* =====================================================
+   ONGELIJKE DONKERE FOTO-RAND
+===================================================== */
 
- x.strokeStyle="#17100b";
- x.lineWidth=b*.60;
+const v=x.createRadialGradient(
+w/2,
+h/2,
+Math.min(w,h)*.18,
+w/2,
+h/2,
+Math.max(w,h)*.78
+);
 
- x.strokeRect(
-  b*.38,
-  b*.38,
-  w-b*.76,
-  h-b*.76
- );
+v.addColorStop(
+0,
+"rgba(0,0,0,0)"
+);
 
- x.strokeStyle="#9a7645";
- x.lineWidth=Math.max(2,b*.10);
+v.addColorStop(
+.55,
+"rgba(0,0,0,.03)"
+);
 
- x.strokeRect(
-  b*.78,
-  b*.78,
-  w-b*1.56,
-  h-b*1.56
- );
+v.addColorStop(
+.78,
+"rgba(25,8,2,.30)"
+);
 
- x.strokeStyle="#2a180d";
- x.lineWidth=Math.max(2,b*.14);
+v.addColorStop(
+1,
+"rgba(0,0,0,.88)"
+);
 
- x.strokeRect(
-  b*1.08,
-  b*1.08,
-  w-b*2.16,
-  h-b*2.16
- );
+x.fillStyle=v;
 
- x.strokeStyle="#a07b49";
- x.lineWidth=Math.max(1,b*.035);
+x.fillRect(
+0,
+0,
+w,
+h
+);
 
- x.strokeRect(
-  b*1.38,
-  b*1.38,
-  w-b*2.76,
-  h-b*2.76
- );
 
+/* =====================================================
+   DIK VICTORIAANS KADER
+===================================================== */
 
- /*
-    hoekornamenten
- */
+const b=Math.min(w,h)*.095;
 
- corner(x,b*1.05,b*1.05,1,1);
- corner(x,w-b*1.05,b*1.05,-1,1);
- corner(x,b*1.05,h-b*1.05,1,-1);
- corner(x,w-b*1.05,h-b*1.05,-1,-1);
+x.save();
 
 
- /*
-    sierlijke middenornamenten
- */
+/* brede donkere rand */
 
- x.fillStyle="#a07a47";
- x.font=`${Math.max(22,b*.42)}px Georgia`;
- x.textAlign="center";
+x.fillStyle="rgba(12,6,3,.88)";
 
- x.fillText("❦",w/2,b*.72);
- x.fillText("❦",w/2,h-b*.48);
+x.fillRect(
+0,
+0,
+w,
+b
+);
 
+x.fillRect(
+0,
+h-b,
+w,
+b
+);
 
- x.restore();
+x.fillRect(
+0,
+0,
+b,
+h
+);
 
+x.fillRect(
+w-b,
+0,
+b,
+h
+);
 
- /* =================================================
-    TITEL
- ================================================= */
 
- x.save();
+/* gouden oude lijn */
 
- x.textAlign="center";
- x.textBaseline="middle";
+x.strokeStyle="#a07a47";
+x.lineWidth=Math.max(2,b*.12);
 
- const title=Math.max(
-  28,
-  Math.min(w*.075,82)
- );
+x.strokeRect(
+b*.55,
+b*.55,
+w-b*1.1,
+h-b*1.1
+);
 
- x.font=
-  `bold ${title}px Georgia,"Times New Roman",serif`;
 
- /*
-    diepe drukschaduw
- */
+/* zwarte lijn */
 
- x.fillStyle="rgba(0,0,0,.9)";
+x.strokeStyle="#1b0d07";
+x.lineWidth=Math.max(3,b*.18);
 
- x.fillText(
-  "HALTE PLANTSOEN",
-  w/2+4,
-  b*1.72+4
- );
+x.strokeRect(
+b*.9,
+b*.9,
+w-b*1.8,
+h-b*1.8
+);
 
 
- /*
-    lichte oude inkt
- */
+/* binnenste sierlijn */
 
- x.fillStyle="#dfc28b";
+x.strokeStyle="#927043";
+x.lineWidth=2;
 
- x.fillText(
-  "HALTE PLANTSOEN",
-  w/2,
-  b*1.72
- );
+x.strokeRect(
+b*1.25,
+b*1.25,
+w-b*2.5,
+h-b*2.5
+);
 
 
- /*
-    dunne onderstreping
- */
+/* HOEKEN */
 
- x.strokeStyle="#9b7645";
- x.lineWidth=2;
+drawCorner(
+x,b*1.15,b*1.15,1,1
+);
 
- x.beginPath();
+drawCorner(
+x,w-b*1.15,b*1.15,-1,1
+);
 
- x.moveTo(w*.27,b*2.42);
- x.lineTo(w*.73,b*2.42);
+drawCorner(
+x,b*1.15,h-b*1.15,1,-1
+);
 
- x.stroke();
+drawCorner(
+x,w-b*1.15,h-b*1.15,-1,-1
+);
 
- x.restore();
 
+/* spinnenwebachtige sierlijnen */
 
- /* =================================================
-    ONDERTITEL
- ================================================= */
+x.strokeStyle="#725535";
+x.lineWidth=1;
 
- x.save();
+for(let i=0;i<8;i++){
 
- x.textAlign="center";
+const y=b*1.35+i*b*.65;
 
- const sub=Math.max(
-  13,
-  Math.min(w*.025,29)
- );
+x.beginPath();
 
- x.font=
-  `bold ${sub}px Georgia,"Times New Roman",serif`;
+x.moveTo(b*1.4,y);
 
- x.fillStyle="#d4b77f";
+x.quadraticCurveTo(
+w/2,
+y-15,
+w-b*1.4,
+y
+);
 
- x.fillText(
-  "HALLOWEEN · 23 OKTOBER 2026",
-  w/2,
-  h-b*1.45
- );
+x.stroke();
 
- x.restore();
+}
 
+x.restore();
 
- return c;
+
+/* =====================================================
+   GROTE OUDE TITEL
+===================================================== */
+
+x.save();
+
+x.textAlign="center";
+x.textBaseline="middle";
+
+const titleSize=Math.max(
+28,
+Math.min(w*.075,85)
+);
+
+x.font=
+"bold "+
+titleSize+
+"px Georgia,Times New Roman,serif";
+
+
+/* zwarte drukschaduw */
+
+x.fillStyle="rgba(0,0,0,.95)";
+
+x.fillText(
+"HALTE PLANTSOEN",
+w/2+4,
+b*1.65+5
+);
+
+
+/* oude inkt */
+
+x.fillStyle="#e0c38c";
+
+x.fillText(
+"HALTE PLANTSOEN",
+w/2,
+b*1.65
+);
+
+
+/* kleine sierlijn */
+
+x.strokeStyle="#a17b4a";
+x.lineWidth=2;
+
+x.beginPath();
+
+x.moveTo(
+w*.28,
+b*2.28
+);
+
+x.lineTo(
+w*.72,
+b*2.28
+);
+
+x.stroke();
+
+x.restore();
+
+
+/* =====================================================
+   ONDERTITEL
+===================================================== */
+
+x.save();
+
+x.textAlign="center";
+
+const sub=Math.max(
+13,
+Math.min(w*.026,30)
+);
+
+x.font=
+"bold "+
+sub+
+"px Georgia,Times New Roman,serif";
+
+x.fillStyle="#d6b87d";
+
+x.fillText(
+"HALLOWEEN · 23 OKTOBER 2026",
+w/2,
+h-b*1.45
+);
+
+x.restore();
+
+
+/* ornament boven en onder */
+
+x.save();
+
+x.textAlign="center";
+
+x.fillStyle="#a27b47";
+
+x.font=
+Math.max(20,b*.4)+
+"px Georgia";
+
+x.fillText(
+"❦",
+w/2,
+b*.65
+);
+
+x.fillText(
+"❦",
+w/2,
+h-b*.35
+);
+
+x.restore();
+
+
+return c;
 
 }
 
 
 /* =====================================================
-   VICTORIAAN HOEKORNAMENT
+   VICTORIAAN ORNAMENT
 ===================================================== */
 
-function corner(c,x,y,sx,sy){
+function drawCorner(c,x,y,sx,sy){
 
- c.save();
+c.save();
 
- c.translate(x,y);
- c.scale(sx,sy);
+c.translate(x,y);
+c.scale(sx,sy);
 
- c.strokeStyle="#a17b49";
- c.lineWidth=2.2;
-
- /*
-    grote krul
- */
-
- c.beginPath();
-
- c.moveTo(0,0);
-
- c.bezierCurveTo(
-  30,0,
-  38,28,
-  13,39
- );
-
- c.bezierCurveTo(
-  -8,48,
-  3,62,
-  22,50
- );
-
- c.stroke();
+c.strokeStyle="#a17a48";
+c.lineWidth=2.5;
 
 
- /*
-    tweede krul
- */
+/* grote krul */
 
- c.beginPath();
+c.beginPath();
 
- c.moveTo(5,5);
+c.moveTo(0,0);
 
- c.bezierCurveTo(
-  38,9,
-  49,39,
-  29,61
- );
+c.bezierCurveTo(
+35,
+0,
+42,
+32,
+14,
+43
+);
 
- c.stroke();
+c.bezierCurveTo(
+-10,
+53,
+3,
+68,
+25,
+52
+);
+
+c.stroke();
 
 
- /*
-    webachtige lijnen
- */
+/* tweede krul */
 
- c.globalAlpha=.75;
+c.beginPath();
 
- for(let i=0;i<5;i++){
+c.moveTo(6,6);
 
-  c.beginPath();
+c.bezierCurveTo(
+43,
+10,
+52,
+42,
+30,
+65
+);
 
-  c.moveTo(
-   4,
-   10+i*10
-  );
+c.stroke();
 
-  c.quadraticCurveTo(
-   18,
-   5+i*11,
-   32,
-   10+i*10
-  );
 
-  c.stroke();
+/* web */
 
- }
+c.globalAlpha=.8;
 
- c.restore();
+for(let i=0;i<6;i++){
+
+c.beginPath();
+
+c.moveTo(
+5,
+10+i*10
+);
+
+c.quadraticCurveTo(
+20,
+5+i*11,
+35,
+10+i*10
+);
+
+c.stroke();
+
+}
+
+c.restore();
 
 }
 
@@ -742,61 +886,73 @@ function corner(c,x,y,sx,sy){
    WACHTRIJ
 ===================================================== */
 
-saveBtn.addEventListener("click",()=>{
+saveBtn.addEventListener(
+"click",
+()=>{
 
- if(!processed.length)return;
+if(!processed.length)return;
 
- for(const image of processed){
+for(const image of processed){
 
-  const data=image.toDataURL(
-   "image/jpeg",
-   .92
-  );
+const data=image.toDataURL(
+"image/jpeg",
+.92
+);
 
-  const card=document.createElement("div");
-  card.className="card";
+const card=document.createElement("div");
 
-  const img=document.createElement("img");
-  img.src=data;
+card.className="card";
 
-  const info=document.createElement("div");
-  info.className="cardInfo";
-  info.textContent="Klaar voor beoordeling";
+const imageEl=document.createElement("img");
 
-  card.appendChild(img);
-  card.appendChild(info);
+imageEl.src=data;
 
-  queueGrid.prepend(card);
+const info=document.createElement("div");
 
- }
+info.className="cardInfo";
 
- processed=[];
+info.textContent=
+"Klaar voor beoordeling";
 
- wrap.style.display="none";
- filesInput.value="";
+card.appendChild(imageEl);
+card.appendChild(info);
 
- statusEl.textContent=
-  "Foto('s) staan nu in de wachtrij.";
+queueGrid.prepend(card);
 
-});
+}
+
+processed=[];
+
+wrap.style.display="none";
+
+filesInput.value="";
+
+statusEl.textContent=
+"Foto('s) staan nu in de wachtrij.";
+
+}
+);
 
 
 /* =====================================================
    ANNULEREN
 ===================================================== */
 
-clearBtn.addEventListener("click",()=>{
+clearBtn.addEventListener(
+"click",
+()=>{
 
- processed=[];
+processed=[];
 
- wrap.style.display="none";
+wrap.style.display="none";
 
- filesInput.value="";
+filesInput.value="";
 
- statusEl.textContent=
-  "Kies één of meer foto's.";
+statusEl.textContent=
+"Kies één of meer foto's.";
 
-});
+}
+);
 
 </script>
 
