@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Halte Plantsoen — Fotowachtrij 1913</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#17130f;color:#eee7d8;font-family:Georgia,serif}
+main{max-width:900px;margin:auto;padding:22px}
+h1{font-size:30px;margin:0 0 6px}
+.sub{opacity:.75;margin-bottom:22px}
+button,.pick{display:inline-block;border:1px solid #9b8a68;background:#30281d;color:#f3ead8;padding:12px 16px;border-radius:7px;font:inherit;cursor:pointer}
+input{display:none}
+#status{margin:16px 0;min-height:24px}
+#previewWrap{display:none;background:#241d15;padding:16px;border-radius:10px}
+canvas{display:block;width:100%;height:auto;background:#d9c7a5}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+#queue{margin-top:28px}
+.queueGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.card{background:#241d15;padding:8px;border-radius:8px}
+.card img{width:100%;display:block}
+.card small{display:block;margin-top:6px;opacity:.75}
+.note{font-size:14px;opacity:.65;line-height:1.5;margin-top:18px}
+</style>
+</head>
+<body>
+<main>
+<h1>Halte Plantsoen</h1>
+<div class="sub">Fotowachtrij · 1913 · Halloween 23 oktober 2026</div>
+
+<label class="pick" for="files">KIES FOTO'S VAN JE SAMSUNG</label>
+<input id="files" type="file" accept="image/*" multiple>
+
+<div id="status">Kies één of meer foto's. De foto's worden op deze telefoon verwerkt.</div>
+
+<div id="previewWrap">
+  <canvas id="canvas"></canvas>
+  <div class="actions">
+    <button id="save">IN WACHTRIJ ZETTEN</button>
+    <button id="clear">ANNULEREN</button>
+  </div>
+</div>
+
+<section id="queue">
+<h2>Wachtrij</h2>
+<div id="queueGrid" class="queueGrid"></div>
+</section>
+
+<div class="note">
+De originele Samsung-foto wordt niet veranderd. De site maakt een nieuwe versie met een oude 1913-uitstraling, kader en tekst.
+</div>
+</main>
+
+<script>
+const filesInput=document.getElementById("files");
+const statusEl=document.getElementById("status");
+const wrap=document.getElementById("previewWrap");
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+const queueGrid=document.getElementById("queueGrid");
+const saveBtn=document.getElementById("save");
+const clearBtn=document.getElementById("clear");
+
+let processed=[];
+
+function makeProcessed(img){
+  const maxW=1800;
+  const scale=Math.min(1,maxW/img.naturalWidth);
+  const w=Math.round(img.naturalWidth*scale);
+  const h=Math.round(img.naturalHeight*scale);
+  const border=Math.max(70,Math.round(w*.045));
+  const bottom=Math.max(180,Math.round(h*.13));
+
+  canvas.width=w+border*2;
+  canvas.height=h+border+bottom;
+
+  ctx.fillStyle="#d8c5a0";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.save();
+  ctx.translate(border,border);
+  ctx.filter="sepia(.30) saturate(.72) contrast(.94) brightness(1.12)";
+  ctx.drawImage(img,0,0,w,h);
+  ctx.restore();
+
+  ctx.strokeStyle="rgba(65,48,30,.65)";
+  ctx.lineWidth=4;
+  ctx.strokeRect(border+2,border+2,w-4,h-4);
+
+  ctx.fillStyle="#352719";
+  ctx.textAlign="center";
+  ctx.font="bold "+Math.max(24,Math.round(w*.035))+"px Georgia";
+  ctx.fillText("HALTE PLANTSOEN",canvas.width/2,h+border+Math.max(55,Math.round(h*.045)));
+
+  ctx.font=Math.max(20,Math.round(w*.024))+"px Georgia";
+  ctx.fillText("HALLOWEEN · 23 OKTOBER 2026",canvas.width/2,h+border+Math.max(105,Math.round(h*.085)));
+
+  return canvas.toDataURL("image/jpeg",.92);
+}
+
+function readImage(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const img=new Image();
+      img.onload=()=>resolve(img);
+      img.onerror=reject;
+      img.src=reader.result;
+    };
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+filesInput.addEventListener("change",async()=>{
+  if(!filesInput.files.length)return;
+
+  statusEl.textContent="Foto's verwerken…";
+  processed=[];
+  wrap.style.display="none";
+
+  try{
+    for(const file of filesInput.files){
+      const img=await readImage(file);
+      processed.push(makeProcessed(img));
+    }
+
+    if(processed.length){
+      const preview=new Image();
+      preview.onload=()=>{
+        canvas.width=preview.naturalWidth;
+        canvas.height=preview.naturalHeight;
+        ctx.drawImage(preview,0,0);
+      };
+      preview.src=processed[0];
+      wrap.style.display="block";
+      statusEl.textContent=processed.length+" foto"+(processed.length===1?"":"’s")+" verwerkt. Controleer de eerste foto.";
+    }
+  }catch(e){
+    statusEl.textContent="Er ging iets mis met het inladen van de foto.";
+  }
+});
+
+saveBtn.addEventListener("click",()=>{
+  if(!processed.length)return;
+
+  for(const data of processed){
+    const card=document.createElement("div");
+    card.className="card";
+
+    const img=document.createElement("img");
+    img.src=data;
+
+    const small=document.createElement("small");
+    small.textContent="Wacht op goedkeuring";
+
+    card.appendChild(img);
+    card.appendChild(small);
+    queueGrid.prepend(card);
+  }
+
+  statusEl.textContent=processed.length+" foto"+(processed.length===1?"":"’s")+" staan in de wachtrij.";
+  processed=[];
+  filesInput.value="";
+  wrap.style.display="none";
+});
+
+clearBtn.addEventListener("click",()=>{
+  processed=[];
+  filesInput.value="";
+  wrap.style.display="none";
+  statusEl.textContent="Kies één of meer foto's.";
+});
+</script>
+</body>
+</html>
