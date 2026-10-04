@@ -3,809 +3,245 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>Halte Plantsoen - Fotowachtrij</title>
+<title>Halte Plantsoen — Fotowachtrij</title>
 
 <style>
 *{box-sizing:border-box}
 
-html,body{
+body{
   margin:0;
-  padding:0;
-  background:#0b0705;
-  color:#ead9b8;
-  font-family:Georgia,"Times New Roman",serif;
+  background:#17130f;
+  color:#eee7d8;
+  font-family:Georgia,serif
 }
 
-body{padding:20px}
-
-.panel{
+main{
   max-width:900px;
   margin:auto;
+  padding:20px
 }
 
 h1{
-  margin:0;
-  text-align:center;
-  font-size:32px;
-  letter-spacing:5px;
-  color:#ead9b8;
+  font-size:28px;
+  margin:0 0 5px
 }
 
 .sub{
-  text-align:center;
-  margin:7px 0 25px;
-  letter-spacing:2px;
+  opacity:.7;
+  margin-bottom:18px
 }
 
-.controls{
-  background:#17100c;
-  border:1px solid #76583d;
-  padding:18px;
+button,.pick{
+  display:inline-block;
+  border:1px solid #9b8a68;
+  background:#30281d;
+  color:#f3ead8;
+  padding:12px 15px;
+  border-radius:7px;
+  font:inherit;
+  cursor:pointer
 }
 
-label.pick,
-button{
-  display:block;
-  width:100%;
-  padding:14px;
-  border:1px solid #98724e;
-  background:#302016;
-  color:#f0dfba;
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:16px;
-  text-align:center;
-  cursor:pointer;
-}
-
-label.pick:hover,
-button:hover{
-  background:#49301f;
-}
-
-input[type=file]{display:none}
-
-.settings{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-top:15px;
-}
-
-.settings label{
-  font-size:14px;
-}
-
-.settings input{
-  width:100%;
-  margin-top:6px;
-  padding:11px;
-  background:#0d0907;
-  border:1px solid #684b33;
-  color:#ead9b8;
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:15px;
+input{
+  display:none
 }
 
 #status{
-  text-align:center;
-  margin-top:15px;
+  margin:14px 0;
+  min-height:24px
 }
 
 #previewWrap{
   display:none;
-  margin-top:25px;
-}
-
-.preview{
-  padding:13px;
-  background:#21150e;
-  border:1px solid #654832;
-  box-shadow:0 0 30px #000;
+  background:#241d15;
+  padding:12px;
+  border-radius:10px
 }
 
 canvas{
   display:block;
   width:100%;
   height:auto;
+  background:#ddd
 }
 
 .actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-top:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px
 }
 
 #queue{
-  max-width:900px;
-  margin:35px auto;
-}
-
-#queue h2{
-  text-align:center;
-  letter-spacing:4px;
-  border-bottom:1px solid #60442f;
-  padding-bottom:12px;
+  margin-top:28px
 }
 
 .queueGrid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:18px;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:12px
 }
 
 .card{
-  background:#17100c;
-  border:1px solid #60442f;
+  background:#241d15;
   padding:8px;
+  border-radius:8px
 }
 
 .card img{
-  display:block;
   width:100%;
+  display:block
+}
+
+.card small{
+  display:block;
+  margin-top:6px;
+  opacity:.75
 }
 
 .card button{
   margin-top:8px;
-  font-size:14px;
-  padding:9px;
+  width:100%;
+  padding:8px
 }
 
-@media(max-width:600px){
-  body{padding:12px}
-  h1{font-size:25px}
-  .settings{grid-template-columns:1fr}
+.note{
+  font-size:14px;
+  opacity:.65;
+  line-height:1.5;
+  margin-top:18px
 }
 </style>
 </head>
 
 <body>
 
-<div class="panel">
+<main>
 
-<h1>HALTE PLANTSOEN</h1>
+<h1>Halte Plantsoen</h1>
 
 <div class="sub">
-HALLOWEEN · 23 OKTOBER 2026
+Fotowachtrij · 1913 · Halloween 23 oktober 2026
 </div>
-
-<div class="controls">
-
-<input id="files" type="file" accept="image/*" multiple>
 
 <label class="pick" for="files">
 KIES FOTO'S VAN JE SAMSUNG
 </label>
 
-<div class="settings">
-
-<label>
-Titel
-<input id="titleInput" value="HALTE PLANTSOEN">
-</label>
-
-<label>
-Ondertitel
-<input id="dateInput" value="HALLOWEEN · 23 OKTOBER 2026">
-</label>
-
-</div>
+<input id="files" type="file" accept="image/*" multiple>
 
 <div id="status">
-Kies één of meer foto's.
-</div>
-
+Kies één of meer foto's. De originele foto's blijven ongewijzigd.
 </div>
 
 <div id="previewWrap">
 
-<div class="preview">
 <canvas id="canvas"></canvas>
-</div>
 
 <div class="actions">
-<button id="save">IN WACHTRIJ ZETTEN</button>
-<button id="clear">ANNULEREN</button>
-</div>
+
+<button id="save">
+IN WACHTRIJ ZETTEN
+</button>
+
+<button id="clear">
+ANNULEREN
+</button>
 
 </div>
-
 </div>
 
 <section id="queue">
 
-<h2>✦ WACHTRIJ ✦</h2>
+<h2>Wachtrij</h2>
 
 <div id="queueGrid" class="queueGrid"></div>
 
 </section>
 
+<div class="note">
+Het kader en filter zijn ingebouwd in deze pagina.
+De foto komt achter het transparante fotovak van het 1913-filter.
+</div>
+
+</main>
 
 <script>
 
-const filesInput=document.getElementById("files");
-const statusEl=document.getElementById("status");
-const previewWrap=document.getElementById("previewWrap");
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
+/* HIER ZIT JOUW GEMAAKTE 1913-FILTER IN */
+const FILTER_SRC="data:image/webp;base64,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";
 
-const saveBtn=document.getElementById("save");
-const clearBtn=document.getElementById("clear");
+const PHOTO={
+  x:31,
+  y:36,
+  w:1474,
+  h:892
+};
 
-const titleInput=document.getElementById("titleInput");
-const dateInput=document.getElementById("dateInput");
+const filesInput=document.getElementById('files');
+const statusEl=document.getElementById('status');
+const wrap=document.getElementById('previewWrap');
+const canvas=document.getElementById('canvas');
+const ctx=canvas.getContext('2d');
+const queueGrid=document.getElementById('queueGrid');
 
-const queueGrid=document.getElementById("queueGrid");
+let processed=[];
 
-let currentImage=null;
-let currentFileName="";
-let queue=[];
+const filterImg=new Image();
 
+filterImg.src=FILTER_SRC;
 
-/* =========================================================
-   FOTO KIEZEN
-========================================================= */
+filterImg.onload=()=>{
+  canvas.width=filterImg.naturalWidth;
+  canvas.height=filterImg.naturalHeight;
+};
 
-filesInput.addEventListener("change",function(){
+function readImage(file){
 
-  if(!this.files.length)return;
+  return new Promise((resolve,reject)=>{
 
-  const file=this.files[0];
+    const r=new FileReader();
 
-  currentFileName=file.name;
+    r.onload=()=>{
 
-  const url=URL.createObjectURL(file);
-  const img=new Image();
+      const i=new Image();
 
-  img.onload=function(){
+      i.onload=()=>resolve(i);
 
-    currentImage=img;
+      i.onerror=reject;
 
-    makeOldPhoto(img);
-
-    previewWrap.style.display="block";
-
-    statusEl.textContent=
-      "Foto klaar om te bekijken: "+file.name;
-
-    URL.revokeObjectURL(url);
-  };
-
-  img.src=url;
-
-});
-
-
-/* =========================================================
-   OUDE FOTO
-========================================================= */
-
-function makeOldPhoto(img){
-
-  const maxWidth=1100;
-
-  let w=img.naturalWidth;
-  let h=img.naturalHeight;
-
-  if(w>maxWidth){
-    h=Math.round(h*maxWidth/w);
-    w=maxWidth;
-  }
-
-  const border=Math.round(w*.075);
-  const paperHeight=Math.round(w*.255);
-
-  const outW=w+border*2;
-  const outH=h+border*2+paperHeight;
-
-  canvas.width=outW;
-  canvas.height=outH;
-
-  ctx.clearRect(0,0,outW,outH);
-
-
-  /* -------------------------------------------------------
-     OUDE DONKERE FOTOPAPIER ACHTERGROND
-  ------------------------------------------------------- */
-
-  const bg=ctx.createLinearGradient(0,0,0,outH);
-
-  bg.addColorStop(0,"#35261b");
-  bg.addColorStop(.5,"#241810");
-  bg.addColorStop(1,"#120c08");
-
-  ctx.fillStyle=bg;
-  ctx.fillRect(0,0,outW,outH);
-
-
-  /* -------------------------------------------------------
-     FOTO
-  ------------------------------------------------------- */
-
-  const px=border;
-  const py=border;
-
-  ctx.drawImage(img,px,py,w,h);
-
-
-  /* -------------------------------------------------------
-     ECHT OUDE FOTO FILTER
-  ------------------------------------------------------- */
-
-  const data=ctx.getImageData(px,py,w,h);
-  const p=data.data;
-
-  for(let i=0;i<p.length;i+=4){
-
-    let r=p[i];
-    let g=p[i+1];
-    let b=p[i+2];
-
-    /*
-      Luminantie.
-      Hierdoor krijgt de foto het karakter van
-      ouder fotografisch materiaal.
-    */
-
-    const lum=
-      .299*r+
-      .587*g+
-      .114*b;
-
-
-    /*
-      Minder moderne kleur,
-      maar NIET volledig sepia.
-    */
-
-    const colour=.68;
-
-    r=lum+(r-lum)*colour;
-    g=lum+(g-lum)*colour;
-    b=lum+(b-lum)*colour;
-
-
-    /*
-      Warme, vergeelde oude emulsie.
-    */
-
-    r=r*1.08+7;
-    g=g*1.00+3;
-    b=b*.88;
-
-
-    /*
-      Lichte vervaging van contrast.
-    */
-
-    r=128+(r-128)*.88;
-    g=128+(g-128)*.88;
-    b=128+(b-128)*.88;
-
-
-    /*
-      Oude filmkorrel.
-    */
-
-    const grain=(Math.random()-.5)*15;
-
-    r+=grain;
-    g+=grain;
-    b+=grain;
-
-
-    /*
-      Verweerde donkere hoeken.
-    */
-
-    const xx=(i/4)%w;
-    const yy=Math.floor((i/4)/w);
-
-    const dx=(xx-w/2)/(w/2);
-    const dy=(yy-h/2)/(h/2);
-
-    const distance=Math.sqrt(dx*dx+dy*dy);
-
-    if(distance>.62){
-
-      const dark=(distance-.62)*35;
-
-      r-=dark;
-      g-=dark;
-      b-=dark;
-    }
-
-
-    p[i]=Math.max(0,Math.min(255,r));
-    p[i+1]=Math.max(0,Math.min(255,g));
-    p[i+2]=Math.max(0,Math.min(255,b));
-  }
-
-  ctx.putImageData(data,px,py);
-
-
-  /* -------------------------------------------------------
-     OUDE GELE LICHTWAAS
-  ------------------------------------------------------- */
-
-  ctx.save();
-
-  const warm=ctx.createRadialGradient(
-    px+w*.45,
-    py+h*.35,
-    20,
-    px+w*.5,
-    py+h*.5,
-    Math.max(w,h)*.8
-  );
-
-  warm.addColorStop(0,"rgba(255,235,185,.06)");
-  warm.addColorStop(.55,"rgba(160,105,45,.02)");
-  warm.addColorStop(1,"rgba(35,18,8,.30)");
-
-  ctx.fillStyle=warm;
-  ctx.fillRect(px,py,w,h);
-
-  ctx.restore();
-
-
-  /* -------------------------------------------------------
-     STOF / VLEKKEN OP DE FOTO
-  ------------------------------------------------------- */
-
-  ctx.save();
-
-  for(let i=0;i<55;i++){
-
-    const x=px+Math.random()*w;
-    const y=py+Math.random()*h;
-
-    const r=Math.random()*2.8+.4;
-
-    ctx.fillStyle=
-      Math.random()>.45
-      ?"rgba(235,218,180,.18)"
-      :"rgba(45,25,12,.20)";
-
-    ctx.beginPath();
-    ctx.arc(x,y,r,0,Math.PI*2);
-    ctx.fill();
-  }
-
-  ctx.restore();
-
-
-  /* -------------------------------------------------------
-     KRASSEN
-  ------------------------------------------------------- */
-
-  ctx.save();
-
-  ctx.globalAlpha=.18;
-
-  for(let i=0;i<16;i++){
-
-    const x=px+Math.random()*w;
-    const y=py+Math.random()*h;
-
-    ctx.strokeStyle=
-      Math.random()>.5
-      ?"rgba(255,242,205,.8)"
-      :"rgba(40,20,10,.7)";
-
-    ctx.lineWidth=Math.random()*1.2+.3;
-
-    ctx.beginPath();
-
-    ctx.moveTo(x,y);
-
-    ctx.lineTo(
-      x+(Math.random()-.5)*10,
-      y+20+Math.random()*120
-    );
-
-    ctx.stroke();
-  }
-
-  ctx.restore();
-
-
-  /* -------------------------------------------------------
-     FOTO RAND
-  ------------------------------------------------------- */
-
-  ctx.strokeStyle="rgba(28,17,11,.95)";
-  ctx.lineWidth=Math.max(5,border*.22);
-
-  ctx.strokeRect(px,py,w,h);
-
-
-  /* -------------------------------------------------------
-     PAPIEREN ONDERSTUK
-  ------------------------------------------------------- */
-
-  const paperY=py+h;
-
-  const paper=ctx.createLinearGradient(
-    0,paperY,
-    0,outH
-  );
-
-  paper.addColorStop(0,"#cbb386");
-  paper.addColorStop(.45,"#bca477");
-  paper.addColorStop(1,"#806546");
-
-  ctx.fillStyle=paper;
-
-  ctx.beginPath();
-
-  ctx.moveTo(0,paperY);
-
-  /*
-    Bovenrand licht onregelmatig.
-  */
-
-  for(let x=0;x<=outW;x+=18){
-
-    ctx.lineTo(
-      x,
-      paperY+(Math.random()*4-2)
-    );
-  }
-
-  /*
-    Onderkant afgesleten.
-  */
-
-  for(let x=outW;x>=0;x-=18){
-
-    ctx.lineTo(
-      x,
-      outH-(Math.random()*9)
-    );
-  }
-
-  ctx.closePath();
-  ctx.fill();
-
-
-  /* -------------------------------------------------------
-     OUDE PAPIERVLEKKEN
-  ------------------------------------------------------- */
-
-  ctx.save();
-
-  for(let i=0;i<24;i++){
-
-    const x=Math.random()*outW;
-    const y=paperY+Math.random()*paperHeight;
-
-    const rx=5+Math.random()*22;
-    const ry=3+Math.random()*13;
-
-    ctx.fillStyle=
-      Math.random()>.5
-      ?"rgba(65,39,20,.12)"
-      :"rgba(245,225,175,.12)";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-      x,y,rx,ry,
-      Math.random()*Math.PI,
-      0,
-      Math.PI*2
-    );
-
-    ctx.fill();
-  }
-
-  ctx.restore();
-
-
-  /* -------------------------------------------------------
-     VICTORIAANSE LIJNEN
-  ------------------------------------------------------- */
-
-  drawDecoration(
-    border*.7,
-    paperY+paperHeight*.68,
-    1
-  );
-
-  drawDecoration(
-    outW-border*.7,
-    paperY+paperHeight*.68,
-    -1
-  );
-
-
-  /* -------------------------------------------------------
-     TITEL
-  ------------------------------------------------------- */
-
-  ctx.textAlign="center";
-
-  const titleSize=
-    Math.max(23,Math.min(55,w*.065));
-
-  ctx.font=
-    "bold "+titleSize+"px Georgia";
-
-  ctx.fillStyle="#291a11";
-
-  ctx.fillText(
-    titleInput.value||"HALTE PLANTSOEN",
-    outW/2,
-    paperY+paperHeight*.43
-  );
-
-
-  /* -------------------------------------------------------
-     DATUM
-  ------------------------------------------------------- */
-
-  const dateSize=
-    Math.max(12,Math.min(22,w*.025));
-
-  ctx.font=
-    dateSize+"px Georgia";
-
-  ctx.fillStyle="#3b281a";
-
-  ctx.fillText(
-    dateInput.value||"HALLOWEEN · 23 OKTOBER 2026",
-    outW/2,
-    paperY+paperHeight*.67
-  );
-
-
-  /* -------------------------------------------------------
-     BUITENSTE BESCHADIGDE RAND
-  ------------------------------------------------------- */
-
-  ctx.strokeStyle="rgba(12,7,4,.95)";
-  ctx.lineWidth=4;
-
-  ctx.strokeRect(
-    3,
-    3,
-    outW-6,
-    outH-6
-  );
-
-}
-
-
-/* =========================================================
-   VICTORIAANSE DECORATIE
-========================================================= */
-
-function drawDecoration(x,y,side){
-
-  ctx.save();
-
-  ctx.translate(x,y);
-  ctx.scale(side,1);
-
-  ctx.strokeStyle="rgba(50,29,18,.78)";
-  ctx.lineWidth=2;
-
-  ctx.beginPath();
-
-  ctx.moveTo(0,0);
-
-  ctx.bezierCurveTo(
-    15,-17,
-    22,11,
-    36,-3
-  );
-
-  ctx.bezierCurveTo(
-    49,-18,
-    54,12,
-    68,-1
-  );
-
-  ctx.stroke();
-
-
-  ctx.beginPath();
-  ctx.arc(18,-7,5,0,Math.PI*2);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.arc(51,-8,4,0,Math.PI*2);
-  ctx.stroke();
-
-  ctx.restore();
-}
-
-
-/* =========================================================
-   TEKST LIVE AANPASSEN
-========================================================= */
-
-titleInput.addEventListener("input",function(){
-
-  if(currentImage)makeOldPhoto(currentImage);
-
-});
-
-dateInput.addEventListener("input",function(){
-
-  if(currentImage)makeOldPhoto(currentImage);
-
-});
-
-
-/* =========================================================
-   WACHTRIJ
-========================================================= */
-
-saveBtn.addEventListener("click",function(){
-
-  if(!currentImage)return;
-
-  queue.push({
-    image:canvas.toDataURL("image/jpeg",.94),
-    name:currentFileName
-  });
-
-  renderQueue();
-
-  statusEl.textContent=
-    "Foto staat in de wachtrij.";
-
-});
-
-
-function renderQueue(){
-
-  queueGrid.innerHTML="";
-
-  queue.forEach(function(item,index){
-
-    const card=document.createElement("div");
-
-    card.className="card";
-
-    const image=document.createElement("img");
-
-    image.src=item.image;
-
-    const remove=document.createElement("button");
-
-    remove.textContent="UIT WACHTRIJ HALEN";
-
-    remove.onclick=function(){
-
-      queue.splice(index,1);
-
-      renderQueue();
-
+      i.src=r.result;
     };
 
-    card.appendChild(image);
-    card.appendChild(remove);
+    r.onerror=reject;
 
-    queueGrid.appendChild(card);
-
+    r.readAsDataURL(file);
   });
-
 }
 
+function coverDraw(img,x,y,w,h){
 
-/* =========================================================
-   ANNULEREN
-========================================================= */
+  const s=Math.max(
+    w/img.naturalWidth,
+    h/img.naturalHeight
+  );
 
-clearBtn.addEventListener("click",function(){
+  const dw=img.naturalWidth*s;
+  const dh=img.naturalHeight*s;
 
-  currentImage=null;
-  currentFileName="";
-  filesInput.value="";
+  ctx.drawImage(
+    img,
+    x+(w-dw)/2,
+    y+(h-dh)/2,
+    dw,
+    dh
+  );
+}
+
+async function makeProcessed(img){
+
+  canvas.width=filterImg.naturalWidth;
+  canvas.height=filterImg.naturalHeight;
 
   ctx.clearRect(
     0,
@@ -814,12 +250,156 @@ clearBtn.addEventListener("click",function(){
     canvas.height
   );
 
-  previewWrap.style.display="none";
+  coverDraw(
+    img,
+    PHOTO.x,
+    PHOTO.y,
+    PHOTO.w,
+    PHOTO.h
+  );
+
+  ctx.drawImage(
+    filterImg,
+    0,
+    0
+  );
+
+  return canvas.toDataURL(
+    'image/jpeg',
+    .94
+  );
+}
+
+filesInput.addEventListener(
+  'change',
+  async()=>{
+
+    if(!filesInput.files.length)return;
+
+    statusEl.textContent=
+      'Foto wordt voorzien van het 1913-filter…';
+
+    processed=[];
+
+    wrap.style.display='none';
+
+    try{
+
+      for(const file of filesInput.files){
+
+        const img=await readImage(file);
+
+        processed.push(
+          await makeProcessed(img)
+        );
+      }
+
+      if(processed.length){
+
+        const p=new Image();
+
+        p.onload=()=>{
+
+          ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+          );
+
+          ctx.drawImage(
+            p,
+            0,
+            0
+          );
+        };
+
+        p.src=processed[0];
+
+        wrap.style.display='block';
+
+        statusEl.textContent=
+          processed.length+
+          ' foto'+
+          (processed.length===1?'':'’s')+
+          ' verwerkt. Je ziet de eerste.';
+      }
+
+    }catch(e){
+
+      console.error(e);
+
+      statusEl.textContent=
+        'Er ging iets mis met de foto.';
+    }
+  }
+);
+
+function addCard(data){
+
+  const card=
+    document.createElement('div');
+
+  card.className='card';
+
+  const img=
+    document.createElement('img');
+
+  img.src=data;
+
+  const small=
+    document.createElement('small');
+
+  small.textContent=
+    'Wacht op goedkeuring';
+
+  const del=
+    document.createElement('button');
+
+  del.textContent=
+    'VERWIJDEREN';
+
+  del.onclick=()=>{
+    card.remove();
+  };
+
+  card.append(
+    img,
+    small,
+    del
+  );
+
+  queueGrid.prepend(card);
+}
+
+document.getElementById('save').onclick=()=>{
+
+  processed.forEach(addCard);
 
   statusEl.textContent=
-    "Kies één of meer foto's.";
+    processed.length+
+    ' foto'+
+    (processed.length===1?'':'’s')+
+    ' staan in de wachtrij.';
 
-});
+  processed=[];
+
+  filesInput.value='';
+
+  wrap.style.display='none';
+};
+
+document.getElementById('clear').onclick=()=>{
+
+  processed=[];
+
+  filesInput.value='';
+
+  wrap.style.display='none';
+
+  statusEl.textContent=
+    'Kies één of meer foto’s.';
+};
 
 </script>
 
