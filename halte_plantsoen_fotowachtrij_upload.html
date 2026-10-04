@@ -11,20 +11,20 @@
 html,body{
   margin:0;
   padding:0;
-  background:#100b08;
-  color:#ead7b2;
+  background:#0c0806;
+  color:#ead7b0;
   font-family:Georgia,"Times New Roman",serif;
 }
 
 body{
   background:
-    radial-gradient(circle at 50% 0,#3a281a,#130d09 50%,#070504);
+    radial-gradient(circle at 50% 0,#3a2818 0,#160e09 48%,#070504 100%);
 }
 
 main{
   width:min(1000px,94%);
   margin:auto;
-  padding:24px 0 50px;
+  padding:22px 0 50px;
 }
 
 header{
@@ -32,23 +32,25 @@ header{
   margin-bottom:24px;
 }
 
-header .orn{
-  color:#a27b49;
+.orn{
+  color:#a67c45;
   font-size:25px;
-  letter-spacing:9px;
+  letter-spacing:10px;
 }
 
 header h1{
-  margin:6px 0 8px;
+  margin:5px 0 8px;
   color:#d9bd86;
   font-size:clamp(34px,8vw,68px);
   letter-spacing:3px;
-  text-shadow:3px 3px #21120a,0 7px 18px #000;
+  line-height:1;
+  text-shadow:3px 4px #211109,0 8px 20px #000;
 }
 
 header p{
   margin:0;
   color:#b89b6b;
+  font-size:15px;
   letter-spacing:3px;
 }
 
@@ -64,10 +66,10 @@ header p{
   padding:18px;
   text-align:center;
   cursor:pointer;
-  color:#ead3a7;
+  color:#ead4aa;
   font-size:18px;
   font-weight:bold;
-  background:linear-gradient(#4a321e,#21140c);
+  background:linear-gradient(#4a321e,#21130b);
   border:2px solid #80603a;
   box-shadow:inset 0 0 0 3px #140b06,0 8px 20px #000;
 }
@@ -83,9 +85,9 @@ header p{
 }
 
 .preview{
-  padding:12px;
+  padding:10px;
   background:#080604;
-  border:1px solid #684a2b;
+  border:1px solid #745331;
   box-shadow:0 12px 35px #000;
 }
 
@@ -221,7 +223,7 @@ filesInput.addEventListener("change",async()=>{
 
     const img=await loadImage(file);
 
-    processed.push(makePhoto(img));
+    processed.push(makeOldPhoto(img));
 
   }
 
@@ -231,8 +233,8 @@ filesInput.addEventListener("change",async()=>{
 
   statusEl.textContent=
     processed.length===1
-    ?"Foto klaar om te bekijken."
-    :processed.length+" foto's klaar.";
+      ?"Foto klaar om te bekijken."
+      :processed.length+" foto's klaar.";
 
 });
 
@@ -259,7 +261,7 @@ function loadImage(file){
 }
 
 
-/* FOTO TONEN */
+/* TONEN */
 
 function show(img){
 
@@ -267,8 +269,7 @@ function show(img){
   canvas.height=img.height;
 
   ctx.clearRect(
-    0,
-    0,
+    0,0,
     canvas.width,
     canvas.height
   );
@@ -278,12 +279,11 @@ function show(img){
 }
 
 
-/* =====================================================
-   NIEUWE FOTO-STIJL
-   Gebaseerd op de twee voorbeeldfoto's
-===================================================== */
+/* =========================================================
+   OUDE FOTO / POSTER
+========================================================= */
 
-function makePhoto(img){
+function makeOldPhoto(img){
 
   let w=img.naturalWidth;
   let h=img.naturalHeight;
@@ -301,62 +301,75 @@ function makePhoto(img){
 
 
   /*
-     EXTRA HOOGTE VOOR DE PAPIEREN ONDERRAND
+     De poster is maar iets hoger dan de originele foto.
+     Daardoor blijft de foto groot.
   */
 
-  const photoHeight=Math.round(h*0.86);
-  const panelHeight=Math.round(h*0.22);
+  const outer=22;
 
-  const totalHeight=photoHeight+panelHeight;
+  const bottom=Math.round(h*.19);
+
+  const totalH=h+bottom;
 
 
   const c=document.createElement("canvas");
 
-  c.width=w;
-  c.height=totalHeight;
-
+  c.width=w+outer*2;
+  c.height=totalH+outer*2;
 
   const x=c.getContext("2d");
 
 
-  /* =================================================
-     DONKERE OUDE BASIS
-  ================================================= */
+  /* =======================================================
+     OUDE DONKERE BASIS
+  ======================================================= */
 
-  x.fillStyle="#24150b";
+  x.fillStyle="#3b2413";
 
   x.fillRect(
     0,
     0,
-    w,
-    totalHeight
+    c.width,
+    c.height
   );
 
 
-  /* =================================================
+  /*
+     oude papierkleur langs de rand
+  */
+
+  x.fillStyle="#9c7140";
+
+  x.fillRect(
+    outer,
+    outer,
+    w,
+    totalH
+  );
+
+
+  /* =======================================================
      FOTO
-  ================================================= */
+  ======================================================= */
 
   x.drawImage(
     img,
-    0,
-    0,
+    outer,
+    outer,
     w,
-    photoHeight
+    h
   );
 
 
-  /* =================================================
-     LICHTE OUDE FOTOTINT
-     
-     KLEUREN BLIJVEN BEHOUDEN
-  ================================================= */
+  /* =======================================================
+     KLEUR: OUDER, MAAR NIET BRUIN
+  ======================================================= */
 
   const pixels=x.getImageData(
-    0,
-    0,
+    outer,
+    outer,
     w,
-    photoHeight
+    h
   );
 
   const d=pixels.data;
@@ -370,22 +383,32 @@ function makePhoto(img){
 
 
     /*
-       Oude warme fotografische tint
-       zonder de foto bruin te maken.
+       lichte warme emulsie
     */
 
     r=r*1.035;
-    g=g*.985;
-    b=b*.91;
+    g=g*.99;
+    b=b*.94;
 
 
     /*
-       Klein beetje contrast
+       iets minder moderne kleur
     */
 
-    r=(r-128)*1.06+128;
-    g=(g-128)*1.06+128;
-    b=(b-128)*1.06+128;
+    const grey=(r+g+b)/3;
+
+    r=r*.90+grey*.10;
+    g=g*.90+grey*.10;
+    b=b*.90+grey*.10;
+
+
+    /*
+       oud contrast
+    */
+
+    r=(r-128)*1.07+128;
+    g=(g-128)*1.07+128;
+    b=(b-128)*1.07+128;
 
 
     d[i]=Math.max(0,Math.min(255,r));
@@ -397,22 +420,22 @@ function makePhoto(img){
 
   x.putImageData(
     pixels,
-    0,
-    0
+    outer,
+    outer
   );
 
 
-  /* =================================================
-     OUDE FOTO - ZACHTE DONKERE HOEKEN
-  ================================================= */
+  /* =======================================================
+     ZACHTE OUDE FOTO-VIGNET
+  ======================================================= */
 
   const vignette=x.createRadialGradient(
-    w/2,
-    photoHeight*.48,
-    Math.min(w,photoHeight)*.25,
-    w/2,
-    photoHeight*.48,
-    Math.max(w,photoHeight)*.72
+    c.width/2,
+    outer+h*.48,
+    Math.min(w,h)*.25,
+    c.width/2,
+    outer+h*.48,
+    Math.max(w,h)*.72
   );
 
   vignette.addColorStop(
@@ -422,41 +445,41 @@ function makePhoto(img){
 
   vignette.addColorStop(
     .72,
-    "rgba(25,10,3,.05)"
+    "rgba(35,15,5,.03)"
   );
 
   vignette.addColorStop(
     1,
-    "rgba(0,0,0,.58)"
+    "rgba(8,3,1,.48)"
   );
 
   x.fillStyle=vignette;
 
   x.fillRect(
-    0,
-    0,
+    outer,
+    outer,
     w,
-    photoHeight
+    h
   );
 
 
-  /* =================================================
+  /* =======================================================
      FILMGRAIN
-  ================================================= */
+  ======================================================= */
 
   x.save();
 
-  for(let i=0;i<4500;i++){
+  for(let i=0;i<6500;i++){
 
-    const px=Math.random()*w;
-    const py=Math.random()*photoHeight;
+    const px=outer+Math.random()*w;
+    const py=outer+Math.random()*h;
 
-    const alpha=.018+Math.random()*.045;
+    const a=.018+Math.random()*.055;
 
     x.fillStyle=
       Math.random()>.5
-      ?`rgba(255,235,195,${alpha})`
-      :`rgba(20,8,2,${alpha})`;
+        ?`rgba(255,238,195,${a})`
+        :`rgba(15,5,1,${a})`;
 
     x.fillRect(
       px,
@@ -470,18 +493,17 @@ function makePhoto(img){
   x.restore();
 
 
-  /* =================================================
-     OUDE VLEKKEN
-  ================================================= */
+  /* =======================================================
+     LICHTE OUDE VLEKKEN
+  ======================================================= */
 
   x.save();
 
-  for(let i=0;i<22;i++){
+  for(let i=0;i<28;i++){
 
-    const px=Math.random()*w;
-    const py=Math.random()*photoHeight;
-
-    const r=8+Math.random()*45;
+    const px=outer+Math.random()*w;
+    const py=outer+Math.random()*h;
+    const r=8+Math.random()*50;
 
     const stain=x.createRadialGradient(
       px,py,0,
@@ -490,12 +512,12 @@ function makePhoto(img){
 
     stain.addColorStop(
       0,
-      "rgba(65,30,10,.10)"
+      "rgba(75,38,12,.11)"
     );
 
     stain.addColorStop(
       1,
-      "rgba(65,30,10,0)"
+      "rgba(75,38,12,0)"
     );
 
     x.fillStyle=stain;
@@ -517,33 +539,33 @@ function makePhoto(img){
   x.restore();
 
 
-  /* =================================================
-     OUDE SCHEUREN / KRASSEN
-  ================================================= */
+  /* =======================================================
+     SCHEUREN
+  ======================================================= */
 
   x.save();
 
-  x.globalAlpha=.22;
+  x.globalAlpha=.25;
 
-  for(let i=0;i<24;i++){
+  for(let i=0;i<28;i++){
 
-    const px=Math.random()*w;
-    const py=Math.random()*photoHeight;
+    const px=outer+Math.random()*w;
+    const py=outer+Math.random()*h;
 
     x.strokeStyle=
       Math.random()>.5
-      ?"rgba(255,230,185,.8)"
-      :"rgba(35,12,3,.8)";
+        ?"rgba(255,235,195,.9)"
+        :"rgba(35,12,3,.9)";
 
-    x.lineWidth=1;
+    x.lineWidth=Math.random()<.9?1:2;
 
     x.beginPath();
 
     x.moveTo(px,py);
 
     x.lineTo(
-      px+15+Math.random()*140,
-      py-8+Math.random()*16
+      px+15+Math.random()*170,
+      py-15+Math.random()*30
     );
 
     x.stroke();
@@ -553,63 +575,62 @@ function makePhoto(img){
   x.restore();
 
 
-  /* =================================================
-     PAPIEREN ONDERRAND
-  ================================================= */
+  /* =======================================================
+     PAPIEREN ONDERDEEL
+  ======================================================= */
 
-  const paperTop=photoHeight;
+  const paperY=outer+h;
 
-  const paperGradient=x.createLinearGradient(
+
+  const paper=x.createLinearGradient(
     0,
-    paperTop,
+    paperY,
     0,
-    totalHeight
+    paperY+bottom
   );
 
-  paperGradient.addColorStop(
+  paper.addColorStop(
     0,
-    "#c4a06b"
+    "#d0ad75"
   );
 
-  paperGradient.addColorStop(
-    .45,
-    "#d1b47d"
+  paper.addColorStop(
+    .5,
+    "#c39b62"
   );
 
-  paperGradient.addColorStop(
+  paper.addColorStop(
     1,
-    "#9b7648"
+    "#9b7040"
   );
 
-  x.fillStyle=paperGradient;
+  x.fillStyle=paper;
 
   x.fillRect(
-    0,
-    paperTop,
+    outer,
+    paperY,
     w,
-    panelHeight
+    bottom
   );
 
 
-  /* =================================================
+  /* =======================================================
      PAPIERSTRUCTUUR
-  ================================================= */
+  ======================================================= */
 
   x.save();
 
-  for(let i=0;i<3500;i++){
+  for(let i=0;i<5000;i++){
 
-    const px=Math.random()*w;
-    const py=
-      paperTop+
-      Math.random()*panelHeight;
+    const px=outer+Math.random()*w;
+    const py=paperY+Math.random()*bottom;
 
-    const alpha=.025+Math.random()*.08;
+    const a=.025+Math.random()*.09;
 
     x.fillStyle=
       Math.random()>.5
-      ?`rgba(255,239,190,${alpha})`
-      :`rgba(60,28,8,${alpha})`;
+        ?`rgba(255,235,185,${a})`
+        :`rgba(60,25,5,${a})`;
 
     x.fillRect(
       px,
@@ -623,21 +644,17 @@ function makePhoto(img){
   x.restore();
 
 
-  /* =================================================
+  /* =======================================================
      PAPIER VLEKKEN
-  ================================================= */
+  ======================================================= */
 
   x.save();
 
-  for(let i=0;i<25;i++){
+  for(let i=0;i<30;i++){
 
-    const px=Math.random()*w;
-
-    const py=
-      paperTop+
-      Math.random()*panelHeight;
-
-    const r=5+Math.random()*40;
+    const px=outer+Math.random()*w;
+    const py=paperY+Math.random()*bottom;
+    const r=5+Math.random()*35;
 
     const stain=x.createRadialGradient(
       px,py,0,
@@ -646,12 +663,12 @@ function makePhoto(img){
 
     stain.addColorStop(
       0,
-      "rgba(70,30,8,.20)"
+      "rgba(65,27,5,.20)"
     );
 
     stain.addColorStop(
       1,
-      "rgba(70,30,8,0)"
+      "rgba(65,27,5,0)"
     );
 
     x.fillStyle=stain;
@@ -673,9 +690,9 @@ function makePhoto(img){
   x.restore();
 
 
-  /* =================================================
-     TITEL OP PAPIER
-  ================================================= */
+  /* =======================================================
+     GROTE TITEL
+  ======================================================= */
 
   x.save();
 
@@ -684,8 +701,8 @@ function makePhoto(img){
 
 
   const titleSize=Math.max(
-    25,
-    Math.min(w*.075,78)
+    28,
+    Math.min(w*.085,88)
   );
 
 
@@ -695,122 +712,153 @@ function makePhoto(img){
     "px Georgia,'Times New Roman',serif";
 
 
-  /* donkere drukinkt */
+  /*
+     oude donkere drukinkt
+  */
 
-  x.fillStyle="rgba(45,22,8,.95)";
+  x.fillStyle="#3b1e0c";
 
   x.fillText(
     "HALTE PLANTSOEN",
-    w/2,
-    paperTop+panelHeight*.43
+    c.width/2,
+    paperY+bottom*.43
   );
+
+
+  /*
+     lichte slijtage in de letters
+  */
+
+  x.globalAlpha=.18;
+
+  x.fillStyle="#d8b67a";
+
+  x.fillText(
+    "HALTE PLANTSOEN",
+    c.width/2-1,
+    paperY+bottom*.43-1
+  );
+
+
+  x.globalAlpha=1;
 
 
   /* datum */
 
-  const subSize=Math.max(
+  const sub=Math.max(
     13,
-    Math.min(w*.027,29)
+    Math.min(w*.028,30)
   );
-
 
   x.font=
     "bold "+
-    subSize+
+    sub+
     "px Georgia,'Times New Roman',serif";
 
+  x.fillStyle="#3b1e0c";
 
   x.fillText(
     "HALLOWEEN · 23 OKTOBER 2026",
-    w/2,
-    paperTop+panelHeight*.76
+    c.width/2,
+    paperY+bottom*.72
   );
 
 
   x.restore();
 
 
-  /* =================================================
-     DECORATIE OP PAPIER
-  ================================================= */
+  /* =======================================================
+     ONDERSTE ORNAMENTEN
+  ======================================================= */
 
-  drawPaperDecoration(
+  drawDecoration(
     x,
-    20,
-    paperTop+panelHeight*.70,
-    1,
+    outer+35,
+    paperY+bottom*.70,
     1
   );
 
-
-  drawPaperDecoration(
+  drawDecoration(
     x,
-    w-20,
-    paperTop+panelHeight*.70,
-    -1,
-    1
+    outer+w-35,
+    paperY+bottom*.70,
+    -1
   );
 
 
-  /* =================================================
-     BOVENSTE OUDE FOTOLIJN
-  ================================================= */
+  /* =======================================================
+     BUITENSTE OUDE RAND
+  ======================================================= */
 
-  x.strokeStyle="#8a6338";
-  x.lineWidth=3;
+  x.strokeStyle="#281307";
+  x.lineWidth=8;
+
+  x.strokeRect(
+    outer/2,
+    outer/2,
+    c.width-outer,
+    c.height-outer
+  );
+
+
+  x.strokeStyle="#d0a96f";
+  x.lineWidth=2;
 
   x.strokeRect(
     8,
     8,
-    w-16,
-    totalHeight-16
+    c.width-16,
+    c.height-16
   );
 
 
-  x.strokeStyle="rgba(48,22,7,.7)";
-  x.lineWidth=1;
+  x.strokeStyle="rgba(50,23,8,.75)";
+  x.lineWidth=2;
 
   x.strokeRect(
     15,
     15,
-    w-30,
-    totalHeight-30
+    c.width-30,
+    c.height-30
   );
 
 
-  /* =================================================
-     AFGELEEFDE RAND
-  ================================================= */
+  /* =======================================================
+     AFGESLETEN / GEBROKEN RAND
+  ======================================================= */
 
   x.save();
 
-  for(let i=0;i<55;i++){
+  for(let i=0;i<85;i++){
 
     const side=Math.floor(Math.random()*4);
 
     let px,py;
 
     if(side===0){
-      px=Math.random()*w;
-      py=Math.random()*10;
+      px=Math.random()*c.width;
+      py=3+Math.random()*16;
     }
-    else if(side===1){
-      px=Math.random()*w;
-      py=totalHeight-10+Math.random()*10;
+
+    if(side===1){
+      px=Math.random()*c.width;
+      py=c.height-18+Math.random()*16;
     }
-    else if(side===2){
-      px=Math.random()*10;
-      py=Math.random()*totalHeight;
+
+    if(side===2){
+      px=3+Math.random()*16;
+      py=Math.random()*c.height;
     }
-    else{
-      px=w-10+Math.random()*10;
-      py=Math.random()*totalHeight;
+
+    if(side===3){
+      px=c.width-18+Math.random()*16;
+      py=Math.random()*c.height;
     }
 
     x.fillStyle=
-      Math.random()>.5
-      ?"rgba(45,20,7,.65)"
-      :"rgba(235,205,155,.35)";
+      Math.random()>.45
+        ?"rgba(35,14,4,.75)"
+        :"rgba(235,203,151,.45)";
 
     x.beginPath();
 
@@ -833,48 +881,44 @@ function makePhoto(img){
 }
 
 
-/* =====================================================
-   PAPIERDECORATIE
-===================================================== */
+/* =========================================================
+   SIERLIJKE HALLOWEEN DECORATIE
+========================================================= */
 
-function drawPaperDecoration(
-  c,
-  x,
-  y,
-  sx,
-  sy
-){
+function drawDecoration(c,x,y,flip){
 
   c.save();
 
   c.translate(x,y);
-  c.scale(sx,sy);
+  c.scale(flip,1);
 
-  c.strokeStyle="#3b1d0d";
+  c.strokeStyle="#3b1d0b";
+  c.fillStyle="#3b1d0b";
   c.lineWidth=2;
 
-  /* krul */
+
+  /* grote Victoriaanse krul */
 
   c.beginPath();
 
   c.moveTo(0,0);
 
   c.bezierCurveTo(
-    25,-25,
-    55,-15,
-    70,5
+    25,-28,
+    65,-25,
+    82,0
   );
 
   c.bezierCurveTo(
-    80,20,
-    55,27,
-    48,10
+    95,20,
+    70,28,
+    60,10
   );
 
   c.bezierCurveTo(
-    44,0,
-    60,-5,
-    66,5
+    53,-4,
+    70,-8,
+    76,5
   );
 
   c.stroke();
@@ -884,12 +928,12 @@ function drawPaperDecoration(
 
   c.beginPath();
 
-  c.moveTo(5,4);
+  c.moveTo(5,8);
 
   c.bezierCurveTo(
-    25,20,
-    35,35,
-    62,28
+    30,28,
+    60,38,
+    90,20
   );
 
   c.stroke();
@@ -897,16 +941,16 @@ function drawPaperDecoration(
 
   /* spinnenweb */
 
-  c.globalAlpha=.9;
-
   c.beginPath();
 
-  c.moveTo(0,0);
-  c.lineTo(30,25);
-  c.moveTo(0,0);
-  c.lineTo(40,0);
-  c.moveTo(0,0);
-  c.lineTo(25,-25);
+  c.moveTo(8,0);
+  c.lineTo(38,28);
+
+  c.moveTo(8,0);
+  c.lineTo(50,0);
+
+  c.moveTo(8,0);
+  c.lineTo(30,-27);
 
   c.stroke();
 
@@ -916,11 +960,11 @@ function drawPaperDecoration(
     c.beginPath();
 
     c.arc(
-      0,
+      8,
       0,
       i*10,
-      -Math.PI*.8,
-      Math.PI*.25
+      -1.1,
+      .65
     );
 
     c.stroke();
@@ -928,15 +972,18 @@ function drawPaperDecoration(
   }
 
 
-  /* klein takje */
+  /* klein blad */
 
   c.beginPath();
 
-  c.moveTo(15,25);
-
-  c.quadraticCurveTo(
-    40,45,
-    75,30
+  c.ellipse(
+    42,
+    23,
+    10,
+    4,
+    -.5,
+    0,
+    Math.PI*2
   );
 
   c.stroke();
@@ -946,9 +993,9 @@ function drawPaperDecoration(
 }
 
 
-/* =====================================================
+/* =========================================================
    WACHTRIJ
-===================================================== */
+========================================================= */
 
 saveBtn.addEventListener("click",()=>{
 
@@ -988,13 +1035,10 @@ saveBtn.addEventListener("click",()=>{
 
   statusEl.textContent=
     "Foto('s) staan nu in de wachtrij.";
-
 });
 
 
-/* =====================================================
-   ANNULEREN
-===================================================== */
+/* ANNULEREN */
 
 clearBtn.addEventListener("click",()=>{
 
@@ -1012,4 +1056,4 @@ clearBtn.addEventListener("click",()=>{
 </script>
 
 </body>
-</html> 
+</html>
